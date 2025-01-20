@@ -113,8 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ForgetPassword(),
+                                      builder: (context) => ForgetPassword(),
                                     ),
                                   );
                                 },

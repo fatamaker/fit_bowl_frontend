@@ -12,11 +12,18 @@ class ServerFailure extends Failure {
 class ConnectionFailure extends Failure {}
 
 class DataNotFoundFailure extends Failure {
-  DataNotFoundFailure({super.message});
+  @override
+  // ignore: overridden_fields
+  final String? message;
+  DataNotFoundFailure(this.message);
 }
 
 class BadOTPFailure extends Failure {
-  BadOTPFailure(String message) : super(message: message);
+  @override
+  // ignore: overridden_fields
+  final String? message;
+
+  BadOTPFailure(this.message);
 }
 
 class RegistrationFailure extends Failure {

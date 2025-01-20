@@ -3,10 +3,15 @@ import 'package:fit_bowl_2/di.dart';
 import 'package:fit_bowl_2/domain/entities/token.dart';
 import 'package:fit_bowl_2/domain/entities/user.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/create_account_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/forget_password_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/login_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/logout_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/reset_password_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/verify_otp_usecase.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/otp_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/reset_passwordScreen.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -143,5 +148,80 @@ class AuthenticationController extends GetxController {
     // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const LoginScreen()));
+  }
+
+  Future<void> sendFrogetPasswordRequest(TextEditingController useremail,
+      String destionation, BuildContext context) async {
+    String message = '';
+    final res = await ForgetPasswordUsecase(sl())(
+        email: useremail.text, destination: destionation);
+    res.fold((l) => message = l.message!, (r) {
+      myemail = useremail.text;
+      useremail.clear();
+      message = "email sent";
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => OtpScreen()));
+    });
+
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Future<void> verifyOTP(
+      TextEditingController otp, BuildContext context) async {
+    if (otp.text.length == 4 && isNumeric(otp.text)) {
+      final res = await OTPVerificationUsecase(sl())(
+          email: myemail, otp: int.parse(otp.text));
+      res.fold(
+          (l) => Fluttertoast.showToast(
+              msg: l.message!,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0), (r) {
+        otp.clear();
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => ResetPasswordscreen()));
+      });
+    }
+  }
+
+  Future<void> resetPassword(TextEditingController password,
+      TextEditingController cpassword, BuildContext context) async {
+    String message = '';
+    final res = await ResetPasswordUsecase(sl())(
+        password: password.text, email: myemail);
+    res.fold((l) => message = l.message!, (r) {
+      password.clear();
+      cpassword.clear();
+      message = "password_reset";
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginScreen()));
+    });
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  bool isNumeric(String number) {
+    for (int i = 0; i < number.length; i++) {
+      if (!'0123456789'.contains(number[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 }

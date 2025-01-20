@@ -20,4 +20,11 @@ abstract class AuthenticationRepository {
 
   Future<Either<Failure, Token>> autologin();
   Future<Either<Failure, Unit>> logout();
+
+  Future<Either<Failure, Unit>> resetPassword(
+      {required String email, required String password});
+  Future<Either<Failure, Unit>> forgetPassword(
+      {required String email, required String destination});
+  Future<Either<Failure, Unit>> verifyOTP(
+      {required String email, required int otp});
 }

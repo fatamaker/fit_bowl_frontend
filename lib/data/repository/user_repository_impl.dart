@@ -73,4 +73,40 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return left(LocalStorageFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> resetPassword(
+      {required String email, required String password}) async {
+    try {
+      await authenticationRemoteDataSource.resetPassword(email, password);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> verifyOTP(
+      {required String email, required int otp}) async {
+    try {
+      await authenticationRemoteDataSource.verifyOTP(email, otp);
+      return const Right(unit);
+    } on BadOTPException catch (e) {
+      return Left(BadOTPFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> forgetPassword(
+      {required String email, required String destination}) async {
+    try {
+      await authenticationRemoteDataSource.forgetPassword(
+          email: email, destination: destination);
+      return const Right(unit);
+    } on DataNotFoundException catch (e) {
+      return Left(DataNotFoundFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
 }

@@ -1,12 +1,12 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class OtpScreen extends StatelessWidget {
-  OtpScreen({super.key});
-  final otpController = TextEditingController();
+class ResetPasswordscreen extends StatelessWidget {
+  ResetPasswordscreen({super.key});
+  final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +40,17 @@ class OtpScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Code verification',
+                      'Reset Password',
                       style: TextStyle(
-                          fontFamily: 'LilitaOne',
-                          fontSize: 40,
-                          color: const Color(0xFFADEBB3)),
+                        fontFamily: 'LilitaOne',
+                        fontSize: 40,
+                        color: const Color(0xFFADEBB3),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Check your email to see the verificatin code',
+                      'Enter your new password below to reset it.',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -62,13 +63,14 @@ class OtpScreen extends StatelessWidget {
 
               const SizedBox(height: 40),
 
-              // Email TextField
+              // Password TextField
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
-                  controller: otpController,
+                  controller: passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'code',
+                    labelText: 'New Password',
                     filled: true,
                     fillColor: const Color(0xFFADEBB3).withOpacity(0.5),
                     border: OutlineInputBorder(
@@ -79,18 +81,42 @@ class OtpScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                ),
+              ),
+
+              // Confirm Password TextField
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  obscureText: true,
+                  controller: confirmpasswordController,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    filled: true,
+                    fillColor: const Color(0xFFADEBB3).withOpacity(0.5),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.black54,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
                 ),
               ),
 
               const SizedBox(height: 30),
 
-              // Continue Button
+              // Reset Button
               ElevatedButton(
                 onPressed: () async {
                   final AuthenticationController controller = Get.find();
-                  await controller.verifyOTP(otpController, context);
+                  await controller.resetPassword(
+                      passwordController, confirmpasswordController, context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF125B3C),
@@ -104,7 +130,7 @@ class OtpScreen extends StatelessWidget {
                   elevation: 7,
                 ),
                 child: const Text(
-                  'verify',
+                  'Reset Password',
                   style: TextStyle(
                     fontFamily: 'LilitaOne',
                     fontSize: 20,

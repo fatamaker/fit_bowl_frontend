@@ -1,11 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:fit_bowl_2/presentation/UI/secreens/otp_screen.dart';
+import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class ForgetPassword extends StatelessWidget {
-  const ForgetPassword({super.key});
+  ForgetPassword({super.key});
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class ForgetPassword extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     filled: true,
@@ -86,34 +89,35 @@ class ForgetPassword extends StatelessWidget {
               const SizedBox(height: 30),
 
               // Continue Button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const OtpScreen(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF125B3C),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 7,
-                ),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(
-                    fontFamily: 'LilitaOne',
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              GetBuilder(
+                  init: AuthenticationController(),
+                  builder: (controller) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        await controller.sendFrogetPasswordRequest(
+                            emailController, emailController.text, context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF125B3C),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 7,
+                      ),
+                      child: const Text(
+                        'Continue',
+                        style: TextStyle(
+                          fontFamily: 'LilitaOne',
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }),
 
               const SizedBox(height: 30),
 

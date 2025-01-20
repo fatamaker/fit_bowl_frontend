@@ -25,6 +25,11 @@ abstract class AuthenticationRemoteDataSource {
   );
   Future<TokenModel> login(String email, String password);
   Future<TokenModel> autoLogin();
+
+  Future<void> forgetPassword(
+      {required String email, required String destination});
+  Future<void> verifyOTP(String email, int otp);
+  Future<void> resetPassword(String email, String password);
 }
 
 class AuthenticationRemoteDataSourceImpl
@@ -121,6 +126,66 @@ class AuthenticationRemoteDataSourceImpl
       return await token;
     } catch (e) {
       print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> forgetPassword({
+    required String email,
+    required String destination,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(APIConst.forgetPassword),
+        body: jsonEncode({"email": email, "destination": destination}),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 404) {
+        throw DataNotFoundException("email not registred");
+      } else if (response.statusCode == 500) {
+        throw ServerException(message: "server error");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse(APIConst.resetPassword),
+        body: jsonEncode({"email": email, "password": password}),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 404) {
+        throw DataNotFoundException("email not registred");
+      } else if (response.statusCode == 500) {
+        throw ServerException(message: "error");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> verifyOTP(String email, int otp) async {
+    try {
+      final response = await http.post(
+        Uri.parse(APIConst.verfifCode),
+        body: jsonEncode({"email": email, "otp": otp}),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 404) {
+        throw BadOTPException("code invalid");
+      } else if (response.statusCode == 400) {
+        throw BadOTPException("expired code");
+      }
+    } catch (e) {
       rethrow;
     }
   }
