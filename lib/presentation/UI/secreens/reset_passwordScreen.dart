@@ -17,7 +17,6 @@ class ResetPasswordscreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Decorative Container for Title
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF125B3C),

@@ -1,87 +1,54 @@
-import 'package:fit_bowl_2/domain/entities/product.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
+import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/shop_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/widgets/botton_nav_bar.dart';
-import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-//import 'package:get/get_core/src/get_main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
-  // Current selected tab index
-  // ignore: unused_field
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool _isSearching = false; // Boolean to toggle search bar visibility
-  // ignore: prefer_final_fields
-  TextEditingController _searchController =
-      TextEditingController(); // Controller for the search input
 
-  // Method to update the selected index when the bottom nav bar changes
-  void navigateBottomBar(int index) {
+  bool _isSearching = false;
+  // ignore: prefer_final_fields
+  TextEditingController _searchController = TextEditingController();
+
+  // Define pages
+  final List<Widget> _pages = [
+    const ShopScreen(),
+    const CartScreen(),
+    ProfileScreen(),
+  ];
+
+  void _onTabChange(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  final cartProducts = [
-    Product(
-      id: '1',
-      name: 'Salade Mélange printanier',
-      image: 'assets/salad_image.png',
-      reference: 'REF001',
-      category: 'Salads',
-      suppIds: [],
-      sizes: {'default': SizeInfo(price: 17.0, calories: 150)},
-    ),
-    Product(
-      id: '2',
-      name: 'Salade César',
-      image: 'assets/salad_image_2.png',
-      reference: 'REF002',
-      category: 'Salads',
-      suppIds: [],
-      sizes: {'default': SizeInfo(price: 20.0, calories: 200)},
-    ),
-  ];
-
-// Pass this to CartScreen:
-
-  // Pages to display based on the selected index
-  final List<Widget> _pages = [
-    // Shop page
-    const ShopScreen(),
-
-    // Cart page
-    const CartScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final String userName = "John Doe"; // Replace with actual user name
+    final String profileImageUrl = 'assetes/salde-removebg.png';
     return Scaffold(
+      extendBody: true,
       backgroundColor: const Color(0xFFF3F6ED),
-      // Bottom navigation bar
-      bottomNavigationBar: BottomNavBar(
-        onTabChange: (index) => navigateBottomBar(index),
-      ),
-
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(70), // Set the custom height for the AppBar
+        preferredSize: Size.fromHeight(70),
         child: AppBar(
           backgroundColor: const Color(0xFFF3F6ED),
           elevation: 0,
           leading: Builder(
             builder: (context) => IconButton(
               onPressed: () {
-                Scaffold.of(context)
-                    .openDrawer(); // This will work correctly now
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(
                 Icons.menu,
@@ -139,7 +106,6 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
       drawer: Drawer(
         backgroundColor: Color(0xFFD9D9D9),
         child: Column(
@@ -150,15 +116,38 @@ class HomeScreenState extends State<HomeScreen> {
               children: [
                 // Logo
                 DrawerHeader(
-                  child: Image.asset(
-                    'assetes/salde-removebg.png',
+                  padding: EdgeInsets.zero,
+                  child: Container(
+                    color: Color(0xFFD9D9D9),
+                    child: Row(
+                      children: [
+                        // Profile Picture
+                        Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: AssetImage(
+                                profileImageUrl), // Load profile image
+                          ),
+                        ),
+                        // User Name
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            userName,
+                            style: TextStyle(
+                              fontFamily: 'LilitaOne',
+                              fontSize: 18,
+                              color: const Color.fromARGB(255, 13, 11, 11),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Divider(
-                    color: Colors.grey[800],
-                  ),
                 ),
                 // command history
                 const Padding(
@@ -206,7 +195,6 @@ class HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // Spacer pushes the Logout button to the bottom
             const Spacer(),
 
             // Logout button
@@ -233,9 +221,11 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
-      // Display the currently selected page
       body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _selectedIndex,
+        onTabChange: _onTabChange,
+      ),
     );
   }
 }

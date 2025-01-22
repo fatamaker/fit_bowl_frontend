@@ -27,21 +27,13 @@ class AuthenticationLocalDataSourceImpl
   }
 
   @override
-  Future<TokenModel> getUserInformations() async {
+  Future<TokenModel?> getUserInformations() async {
     try {
       final sp = await SharedPreferences.getInstance();
       print(sp.getString("access"));
       if (sp.getString(StringConst.SP_TOKEN_KEY) == '' ||
           sp.getString(StringConst.SP_TOKEN_KEY) == null) {
-        return TokenModel.fromJson(const {
-          "message": "login successful",
-          "token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFqZWphQGdtYWlsLmNvbSIsImlhdCI6MTcxNTMzMTk4MCwiZXhwIjoxNzE1MzMyODgwfQ.PxitiEv-iSiob2fzgJ991y1m0JDhVYLWLj5cQfJF3Nk",
-          "refreshtoken":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoieWFzc2luZSIsImlhdCI6MTcxNTMzMTk4MCwiZXhwIjoxNzE1OTM2NzgwfQ.",
-          "tokenExpiration": "2024-05-10 10:21:20",
-          "Uid": "1111"
-        });
+        return null;
       }
       final data = sp.getString(StringConst.SP_TOKEN_KEY);
       TokenModel token = TokenModel.fromJson(json.decode(data.toString()));

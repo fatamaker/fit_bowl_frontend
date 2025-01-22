@@ -1,25 +1,32 @@
 class Product {
-  final String id;
-  final String name;
+  final String? id;
+  final String? name;
   final String? image;
   final String? model3d;
-  final String reference;
+  final String? reference;
   final String? description;
-  final String category;
-  final List<String> suppIds;
-  final Map<String, SizeInfo> sizes;
+  final String? category;
+  final List<String>? suppIds;
+  final ProductSize? sizes;
 
   Product({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
     this.image,
     this.model3d,
-    required this.reference,
+    this.reference,
     this.description,
-    required this.category,
-    required this.suppIds,
-    required this.sizes,
+    this.category,
+    this.suppIds,
+    this.sizes,
   });
+}
+
+class ProductSize {
+  final SizeInfo? small;
+  final SizeInfo? medium;
+  final SizeInfo? large;
+  ProductSize({this.small, this.medium, this.large});
 }
 
 class SizeInfo {

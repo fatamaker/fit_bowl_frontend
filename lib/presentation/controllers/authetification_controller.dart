@@ -1,12 +1,18 @@
 import 'dart:io';
+import 'package:fit_bowl_2/core/utils/string_const.dart';
 import 'package:fit_bowl_2/di.dart';
 import 'package:fit_bowl_2/domain/entities/token.dart';
 import 'package:fit_bowl_2/domain/entities/user.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/clear_user_image_usercase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/create_account_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/forget_password_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/get_user_by_id_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/login_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/logout_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/reset_password_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/update_image_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/update_password_usercase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/update_user_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/verify_otp_usecase.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
@@ -15,6 +21,7 @@ import 'package:fit_bowl_2/presentation/UI/secreens/reset_passwordScreen.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthenticationController extends GetxController {
   late Token token;
@@ -25,10 +32,11 @@ class AuthenticationController extends GetxController {
       false; //Indicates whether an asynchronous operation is in progress.
   late User currentUser; //Represents the logged-in user's data.
   String userImage = '';
-
+  XFile? img;
   File? f; // Converts the XFile into a File object for further processing.
   String? gender;
   String? birthDate;
+  //final ImagePicker _picker = ImagePicker();
 
   bool get missingData =>
       currentUser.phone == null ||
@@ -52,6 +60,24 @@ class AuthenticationController extends GetxController {
   void aceptTerms(bool v) {
     termsAccepted = v;
     update(['terms']);
+  }
+
+  // Future<void> pickImage() async {
+  //   try {
+  //     img = await _picker.pickImage(source: ImageSource.gallery);
+  //     if (img != null) {
+  //       f = File(img!.path);
+  //       setuserImage(basename(f!.path));
+  //     }
+  //   } catch (e) {
+  //     // ignore: avoid_print
+  //     print(e);
+  //   }
+  // }
+
+  void setuserImage(String image) {
+    userImage = image;
+    update([ControllerID.UPDATE_USER_IMAGE]);
   }
 
   Future<String> createAccount(
@@ -223,5 +249,117 @@ class AuthenticationController extends GetxController {
       }
     }
     return true;
+  }
+
+  Future<void> updateProfile(
+      {required String address,
+      required TextEditingController firstName,
+      required TextEditingController lastName,
+      required TextEditingController phone,
+      required id,
+      required String birthDate,
+      required String gender,
+      required BuildContext context}) async {
+    String message = '';
+
+    final res = await UpdateUserUsecase(sl())(
+        firstName: firstName.text,
+        lastName: lastName.text,
+        adresse: address,
+        phone: phone.text,
+        id: id,
+        birthDate: DateTime.parse(birthDate));
+    res.fold((l) => message = l.message!, (r) async {
+      await getCurrentUser(currentUser.id!);
+    });
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Future<void> getCurrentUser(String userId) async {
+    final res = await GetUserByIdUsecase(sl())(userId: userId);
+    res.fold(
+        (l) => Fluttertoast.showToast(
+            msg: l.message!,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0), (r) {
+      currentUser = r;
+      gender = currentUser.gender;
+      birthDate = currentUser.birthDate.toString();
+      print(currentUser);
+    });
+    update();
+  }
+
+  Future<void> updateImage(BuildContext context) async {
+    if (userImage == '') {
+      await ClearUserImageUsecase(sl())(currentUser.id!);
+    } else {
+      await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
+    }
+    await getCurrentUser(currentUser.id!).then((value) =>
+        Fluttertoast.showToast(
+            msg: "profile_picture_updated",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0));
+  }
+
+  Future<void> updatePassword(TextEditingController currentPassword,
+      TextEditingController password, BuildContext context) async {
+    // Ensure currentUser is initialized first
+    // ignore: unnecessary_null_comparison
+    if (currentUser == null) {
+      await getCurrentUser(currentUser.id!); // Fetch current user if null
+    }
+
+    // Check if currentUser is still null after fetching
+    // ignore: unnecessary_null_comparison
+    if (currentUser == null) {
+      Fluttertoast.showToast(
+          msg: "User data is not available. Please log in again.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+
+    String message = 'error';
+    final res = await UpdatePasswordUsercase(sl())(
+      userId: currentUser.id!,
+      newPassword: password.text,
+      oldPassword: currentPassword.text,
+    );
+    res.fold((l) => message = l.message!, (r) async {
+      message = "profile_updated";
+      password.clear();
+      currentPassword.clear();
+      await getCurrentUser(currentUser.id!);
+    });
+
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }

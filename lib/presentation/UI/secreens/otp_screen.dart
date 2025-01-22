@@ -1,12 +1,22 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class OtpScreen extends StatelessWidget {
   OtpScreen({super.key});
+
   final otpController = TextEditingController();
+  final List<TextEditingController> digitControllers =
+      List.generate(4, (index) => TextEditingController());
+
+  TextEditingController getCombinedOTPController() {
+    final combinedController = TextEditingController();
+    combinedController.text =
+        digitControllers.map((controller) => controller.text).join();
+    return combinedController;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +59,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Check your email to see the verificatin code',
+                      'Check your email to see the verification code',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -59,28 +69,42 @@ class OtpScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
               const SizedBox(height: 40),
 
-              // Email TextField
+              // OTP Input Fields
               Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: otpController,
-                  decoration: InputDecoration(
-                    labelText: 'code',
-                    filled: true,
-                    fillColor: const Color(0xFFADEBB3).withOpacity(0.5),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
-                        color: Colors.black54,
-                        width: 1.0,
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(4, (index) {
+                    return SizedBox(
+                      height: 68,
+                      width: 64,
+                      child: TextFormField(
+                        controller: digitControllers[index],
+                        onChanged: (value) {
+                          if (value.length == 1 && index < 3) {
+                            FocusScope.of(context).nextFocus();
+                          } else if (value.isEmpty && index > 0) {
+                            FocusScope.of(context).previousFocus();
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: "0",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        style: Theme.of(context).textTheme.titleLarge,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                       ),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
+                    );
+                  }),
                 ),
               ),
 
@@ -90,7 +114,9 @@ class OtpScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   final AuthenticationController controller = Get.find();
-                  await controller.verifyOTP(otpController, context);
+                  TextEditingController otpCode = getCombinedOTPController();
+                  print("Entered OTP: $otpCode");
+                  await controller.verifyOTP(otpCode, context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF125B3C),

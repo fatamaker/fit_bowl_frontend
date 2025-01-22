@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:fit_bowl_2/core/erreur/exception/exceptions.dart';
 import 'package:fit_bowl_2/core/erreur/failure/failures.dart';
@@ -5,6 +7,7 @@ import 'package:fit_bowl_2/data/data_source/local_data_source/authentication_loc
 import 'package:fit_bowl_2/data/data_source/remote_data_source/remote_authentication_data_source.dart';
 import 'package:fit_bowl_2/data/modeles/token_model.dart';
 import 'package:fit_bowl_2/domain/entities/token.dart';
+import 'package:fit_bowl_2/domain/entities/user.dart';
 import 'package:fit_bowl_2/domain/repository/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
@@ -55,7 +58,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, Token>> autologin() async {
+  Future<Either<Failure, Token?>> autologin() async {
     try {
       final tk = await authenticationRemoteDataSource.autoLogin();
       return right(tk);
@@ -107,6 +110,72 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(DataNotFoundFailure(e.message));
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> getUserById({required String userId}) async {
+    try {
+      final res = await authenticationRemoteDataSource.getUserById(userId);
+      return right(res);
+    } on ServerException catch (_) {
+      return left(ServerFailure());
+    } on UserNotFoundException catch (_) {
+      return left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateImage(
+      {required String userId, required File image}) async {
+    try {
+      await authenticationRemoteDataSource.updateImage(userId, image);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updatePassword(
+      {required String userId,
+      required String oldPassword,
+      required String newPassword}) async {
+    try {
+      await authenticationRemoteDataSource.updatePassword(
+          userId, oldPassword, newPassword);
+      return const Right(unit);
+    } on DataNotFoundException catch (e) {
+      return Left(DataNotFoundFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateUser(
+      {required String id,
+      required String firstName,
+      required String lastName,
+      required String phone,
+      required String address,
+      required DateTime birthDate}) async {
+    try {
+      await authenticationRemoteDataSource.updateUser(
+          id, firstName, lastName, phone, address, birthDate);
+      return const Right(unit);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> clearUserImage(String userId) async {
+    try {
+      await authenticationRemoteDataSource.clearUserImage(userId);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
     }
   }
 }

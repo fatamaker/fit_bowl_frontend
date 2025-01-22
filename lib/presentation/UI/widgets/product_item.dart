@@ -8,8 +8,11 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: non_constant_identifier_names
+    final ProductSize = product.sizes!.small;
+
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -33,8 +36,7 @@ class ProductItem extends StatelessWidget {
                 topRight: Radius.circular(15),
               ),
               child: Image.network(
-                product.image ??
-                    'assetes/Boulangerie_Grissol_Croutons_Spring_Mix_Salad_Recipe-removebg-preview.png',
+                product.image ?? '',
                 width: double.infinity,
                 height: 120.h,
                 fit: BoxFit.cover,
@@ -49,71 +51,73 @@ class ProductItem extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product Name
-                  Text(
-                    product.name,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // Calories
-                  Text(
-                    '${product.sizes.isNotEmpty && product.sizes.values.first.calories != null ? product.sizes.values.first.calories.toString() : '0'} Cal',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.green,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // Product Description
-                  Text(
-                    product.description ?? 'No description available',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[700],
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 10.h),
-
-                  // Price and Favorite Icon
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${product.sizes.isNotEmpty ? product.sizes.values.first.price.toStringAsFixed(2) : '0.00'}D',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Product Name
+                    Text(
+                      product.name ?? 'No name available',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          // Add favorite functionality here
-                        },
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          color: Colors.black,
-                        ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    // Calories
+                    Text(
+                      '${ProductSize!.calories ?? 0} Cal',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: ProductSize.calories! > 300
+                            ? Colors.green
+                            : Colors.red,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+
+                    // Product Description
+                    Text(
+                      product.description ?? 'No description available',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[700],
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    // Price and Favorite Icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${ProductSize.price.toStringAsFixed(2)}D',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // Add favorite functionality here
+                          },
+                          icon: Icon(
+                            Icons.favorite_border,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

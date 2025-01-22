@@ -2,6 +2,7 @@
 
 import 'package:fit_bowl_2/di.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/auto_login_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/get_user_by_id_usecase.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
@@ -41,11 +42,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       res = false;
     }, (r) async {
       print(r.toString());
-      authController.token = r;
-      print(r.token);
-
-      // Here, you can load additional user-specific data if required
-      // Example: final user = await GetUserByIdUsecase(sl()).call(userId: r.userId);
+      if (r != null) {
+        authController.token = r;
+        final user = await GetUserByIdUsecase(sl()).call(userId: r.userId);
+        user.fold((l) {
+          res = false;
+        }, (r) async {
+          authController.currentUser = r;
+          // await wishListController
+          //     .getUserWishlist(authController.currentUser.id!);
+          // await cartController.getUserCart(authController.currentUser.id!);
+          // Get.put(NotificationsController());
+        });
+        print(authController.currentUser.birthDate);
+      } else {
+        res = false;
+      }
     });
 
     setState(() {

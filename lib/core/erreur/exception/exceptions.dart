@@ -12,6 +12,11 @@ class RegistrationException implements Exception {
   RegistrationException(this.message);
 }
 
+class UserNotFoundException implements Exception {
+  final String? message;
+  UserNotFoundException([this.message = "User Not Found"]);
+}
+
 class LoginException implements Exception {
   final String? message;
   LoginException(this.message);

@@ -1,15 +1,18 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_local_variable
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fit_bowl_2/core/erreur/exception/exceptions.dart';
 import 'package:fit_bowl_2/core/utils/api_const.dart';
 
 import 'package:fit_bowl_2/data/data_source/local_data_source/authentication_local_data_source.dart';
 import 'package:fit_bowl_2/data/modeles/token_model.dart';
+import 'package:fit_bowl_2/domain/entities/user.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:fit_bowl_2/data/modeles/user_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 abstract class AuthenticationRemoteDataSource {
   Future<void> createAccount(
@@ -24,17 +27,34 @@ abstract class AuthenticationRemoteDataSource {
     String password,
   );
   Future<TokenModel> login(String email, String password);
-  Future<TokenModel> autoLogin();
+  Future<TokenModel?> autoLogin();
 
   Future<void> forgetPassword(
       {required String email, required String destination});
   Future<void> verifyOTP(String email, int otp);
   Future<void> resetPassword(String email, String password);
+
+  Future<void> updateUser(
+    String id,
+    String firstName,
+    String lastName,
+    String phone,
+    String gender,
+    DateTime birthDate,
+  );
+
+  Future<void> updateImage(String userId, File image);
+
+  Future<void> updatePassword(
+      String userId, String oldPassword, String newPassword);
+
+  Future<User> getUserById(String userId);
+  Future<void> clearUserImage(String userId);
 }
 
 class AuthenticationRemoteDataSourceImpl
     implements AuthenticationRemoteDataSource {
-  Future<TokenModel> get token async {
+  Future<TokenModel?> get token async {
     return await AuthenticationLocalDataSourceImpl().getUserInformations();
   }
 
@@ -100,6 +120,7 @@ class AuthenticationRemoteDataSourceImpl
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         final TokenModel token = TokenModel.fromJson(data);
+        print(token);
         return token;
       } else {
         switch (res.statusCode) {
@@ -121,7 +142,7 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<TokenModel> autoLogin() async {
+  Future<TokenModel?> autoLogin() async {
     try {
       return await token;
     } catch (e) {
@@ -187,6 +208,139 @@ class AuthenticationRemoteDataSourceImpl
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  @override
+  Future<User> getUserById(String userId) async {
+    try {
+      final uri = Uri.parse('${APIConst.userProfile}/$userId');
+      final res = await http.get(uri);
+      if (res.statusCode == 200) {
+        final body = json.decode(res.body);
+
+        return UserModel.fromJson(body);
+      } else if (res.statusCode == 404) {
+        throw UserNotFoundException();
+      } else {
+        throw ServerException();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateImage(String userID, File file) async {
+    try {
+      final url =
+          Uri.parse(APIConst.updateUserImage); // Replace with your API endpoint
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', url);
+      // Add fields
+      request.fields['id'] = userID;
+      // Add the file
+      var fileName = file.path.split('/').last;
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file', // This should match the field name expected by the server
+          file.path,
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+      // Send the request
+      var response = await request.send();
+    } catch (e) {
+      throw ServerException(message: 'cannot update image');
+    }
+  }
+
+  @override
+  Future<void> clearUserImage(String userId) async {
+    try {
+      Map<String, dynamic> model = {'id': userId, 'image': ''};
+      await http.put(
+        Uri.parse('${APIConst.updateProfile}/$userId'),
+        body: model,
+        headers: {
+          "authorization":
+              "Bearer ${await token.then((value) => value!.token)}",
+        },
+      );
+    } catch (e) {
+      throw ServerException(message: 'cannot update profile');
+    }
+  }
+
+  @override
+  Future<void> updatePassword(
+      String userId, String oldPassword, String newPassword) async {
+    try {
+      // AppLocalizations t =
+      //     await AppLocalizations.delegate.load(Locale(await locale));
+
+      Map<String, dynamic> requestData = {
+        'id': userId,
+        'oldPassword': oldPassword,
+        'newPassword': newPassword
+      };
+
+      String authToken = await token.then((value) => value!.token);
+
+      final url = Uri.parse(APIConst.updatePassword);
+      final res = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(requestData),
+      );
+      if (res.statusCode == 202) {
+        throw DataNotFoundException("t.wrong_password");
+      } else if (res.statusCode == 500) {
+        throw ServerException(message: "server error");
+      } else if (res.statusCode != 200) {
+        throw Exception('Unexpected error: ${res.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateUser(
+    String id,
+    String firstName,
+    String lastName,
+    String phone,
+    String address,
+    DateTime birthDate,
+  ) async {
+    try {
+      Map<String, dynamic> userModel = {
+        'firstName': firstName,
+        'lastName': lastName,
+        'phone': phone,
+        'address': address,
+        'birthDate': birthDate.toString(),
+      };
+
+      String authToken = await token.then((value) => value!.token);
+      final url = Uri.parse(APIConst.updateProfile);
+      final res = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(userModel),
+      );
+      if (res.statusCode != 200) {
+        throw ServerException(message: 'Cannot update user');
+      }
+    } catch (e) {
+      throw ServerException(message: 'Cannot update profile: ${e.toString()}');
     }
   }
 }

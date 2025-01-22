@@ -1,4 +1,4 @@
-import '../../domain/entities/user.dart';
+import 'package:fit_bowl_2/domain/entities/user.dart';
 
 class UserModel extends User {
   UserModel({
@@ -17,29 +17,31 @@ class UserModel extends User {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['_id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      imageUrl: json['imageUrl'],
-      email: json['email'],
-      address: json['address'],
-      phone: json['phone'],
-      password: json['password'],
-      gender: json['gender'],
-      birthDate: json['birthDate'],
+      firstName: json['firstName'] ?? 'N/A',
+      lastName: json['lastName'] ?? 'N/A',
+      imageUrl: json['imageUrl'] ?? '',
+      email: json['email'] ?? 'unknown@example.com',
+      address: json['address'] ?? '',
+      phone: json['phone'] ?? '',
+      password: json['password'] ?? '',
+      gender: json['gender'] ?? 'Not Specified',
+      birthDate: json['birthDate'] != null
+          ? DateTime.parse(json['birthDate'])
+          : null, // Handle null date
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'firstName': firstName,
-      'lastName': lastName,
+      'firstName': firstName.isEmpty ? 'N/A' : firstName,
+      'lastName': lastName.isEmpty ? 'N/A' : lastName,
       'imageUrl': imageUrl,
-      'email': email,
+      'email': email.isEmpty ? 'unknown@example.com' : email,
       'address': address,
       'phone': phone,
       'password': password,
-      'gender': gender,
-      'birthDate': birthDate.toString(),
+      'gender': gender!.isEmpty ? 'Not Specified' : gender,
+      'birthDate': birthDate?.toIso8601String(),
     };
   }
 }
