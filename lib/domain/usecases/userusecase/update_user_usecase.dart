@@ -13,6 +13,7 @@ class UpdateUserUsecase {
     required String lastName,
     required String phone,
     required String adresse,
+    required String gender,
     required DateTime birthDate,
   }) async =>
       await _authenticationRepository.updateUser(
@@ -21,5 +22,6 @@ class UpdateUserUsecase {
           lastName: lastName,
           phone: phone,
           address: adresse,
+          gender: gender,
           birthDate: birthDate);
 }

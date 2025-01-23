@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart';
 import 'package:fit_bowl_2/core/utils/string_const.dart';
 import 'package:fit_bowl_2/di.dart';
 import 'package:fit_bowl_2/domain/entities/token.dart';
@@ -36,7 +37,7 @@ class AuthenticationController extends GetxController {
   File? f; // Converts the XFile into a File object for further processing.
   String? gender;
   String? birthDate;
-  //final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
 
   bool get missingData =>
       currentUser.phone == null ||
@@ -62,6 +63,22 @@ class AuthenticationController extends GetxController {
     update(['terms']);
   }
 
+  Future<void> pickImage() async {
+    try {
+      final img = await _picker.pickImage(source: ImageSource.gallery);
+      if (img != null) {
+        final f = File(img.path);
+        setuserImage(basename(f.path));
+      } else {
+        // ignore: avoid_print
+        print("No image selected");
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error while picking image: $e");
+    }
+  }
+
   // Future<void> pickImage() async {
   //   try {
   //     img = await _picker.pickImage(source: ImageSource.gallery);
@@ -78,6 +95,7 @@ class AuthenticationController extends GetxController {
   void setuserImage(String image) {
     userImage = image;
     update([ControllerID.UPDATE_USER_IMAGE]);
+    update();
   }
 
   Future<String> createAccount(
@@ -138,6 +156,7 @@ class AuthenticationController extends GetxController {
     update();
     final res =
         await LoginUsecase(sl())(email: email.text, password: password.text);
+
     res.fold(
         (l) => Fluttertoast.showToast(
             msg: l.message!,
@@ -150,6 +169,9 @@ class AuthenticationController extends GetxController {
       token = r;
       email.clear();
       password.clear();
+      // ignore: unused_local_variable
+      final userRes = await getCurrentUser(r.userId);
+      // ignore: use_build_context_synchronously
       return Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()));
       // await getOneUser(r.userId).then((value) async {
@@ -261,15 +283,16 @@ class AuthenticationController extends GetxController {
       required String gender,
       required BuildContext context}) async {
     String message = '';
-
     final res = await UpdateUserUsecase(sl())(
         firstName: firstName.text,
         lastName: lastName.text,
         adresse: address,
         phone: phone.text,
         id: id,
+        gender: gender,
         birthDate: DateTime.parse(birthDate));
     res.fold((l) => message = l.message!, (r) async {
+      message = "profile_updated";
       await getCurrentUser(currentUser.id!);
     });
     Fluttertoast.showToast(
@@ -296,26 +319,52 @@ class AuthenticationController extends GetxController {
       currentUser = r;
       gender = currentUser.gender;
       birthDate = currentUser.birthDate.toString();
-      print(currentUser);
     });
     update();
   }
 
   Future<void> updateImage(BuildContext context) async {
-    if (userImage == '') {
-      await ClearUserImageUsecase(sl())(currentUser.id!);
-    } else {
-      await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
-    }
-    await getCurrentUser(currentUser.id!).then((value) =>
+    try {
+      if (f == null) {
         Fluttertoast.showToast(
-            msg: "profile_picture_updated",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            fontSize: 16.0));
+          msg: "No image selected",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return;
+      }
+
+      if (userImage == '') {
+        await ClearUserImageUsecase(sl())(currentUser.id!);
+      } else {
+        await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
+      }
+
+      await getCurrentUser(currentUser.id!).then((value) =>
+          Fluttertoast.showToast(
+              msg: "Profile picture updated",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0));
+    } catch (e) {
+      print('Error updating image: $e');
+      Fluttertoast.showToast(
+        msg: "Error updating image: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   Future<void> updatePassword(TextEditingController currentPassword,

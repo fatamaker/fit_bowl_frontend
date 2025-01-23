@@ -1,161 +1,231 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
-class EditProfileScreen extends StatelessWidget {
-  EditProfileScreen({super.key});
+import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  final _formKey = GlobalKey<FormState>();
 
   // Controllers for text fields
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController birthDateController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
+  String? _selectedGender;
+  String? _birthDate;
+  DateTime? _selectedBirthdate;
+
+  final DateFormat format = DateFormat("yyyy-MM-dd");
+
+  void _pickBirthdate(BuildContext context) async {
+    DateTime initialDate = _selectedBirthdate ?? DateTime.now();
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedBirthdate = pickedDate;
+        _birthDate = format.format(_selectedBirthdate!);
+      });
+    }
+  }
+
+  final AuthenticationController authenticationController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Populate fields with current user data
+    _firstNameController.text = authenticationController.currentUser.firstName;
+    _lastNameController.text = authenticationController.currentUser.lastName;
+    _phoneController.text = authenticationController.currentUser.phone!;
+    _addressController.text = authenticationController.currentUser.address!;
+    _birthDate = authenticationController.currentUser.birthDate != null
+        ? format.format(authenticationController.currentUser.birthDate!)
+        : '';
+
+    _selectedGender = authenticationController.currentUser.gender;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Get the AuthenticationController instance
-    final AuthenticationController authenticationController = Get.find();
-
-    // Pre-fill the text fields with the current user data
-    final currentUser = authenticationController.currentUser;
-    firstNameController.text = currentUser.firstName;
-    lastNameController.text = currentUser.lastName;
-    emailController.text = currentUser.email;
-    phoneController.text = currentUser.phone ?? '';
-    addressController.text = currentUser.address ?? '';
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text("Edit Profile"),
         backgroundColor: const Color(0xFF1B6A3D),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // First Name Field
-            TextField(
-              controller: firstNameController,
-              decoration: const InputDecoration(
-                labelText: 'First Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Last Name Field
-            TextField(
-              controller: lastNameController,
-              decoration: const InputDecoration(
-                labelText: 'Last Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Email Field
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-
-            // Phone Field
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Phone',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 16),
-
-            // Address Field
-            TextField(
-              controller: addressController,
-              decoration: const InputDecoration(
-                labelText: 'Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Birth Date Field
-            TextField(
-              controller: birthDateController,
-              decoration: const InputDecoration(
-                labelText: 'Birth Date (YYYY-MM-DD)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.datetime,
-            ),
-            const SizedBox(height: 32),
-
-            // Save Button
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await authenticationController.updateProfile(
-                    address: addressController.text,
-                    firstName: firstNameController,
-                    lastName: lastNameController,
-                    phone: phoneController,
-                    id: currentUser.id,
-                    birthDate: birthDateController.text,
-                    gender: currentUser.gender ?? '',
-                    context: context,
-                  );
-
-                  // Show success message
-                  Fluttertoast.showToast(
-                    msg: 'Profile updated successfully!',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-
-                  // Navigate back
-                  Get.back();
-                } catch (error) {
-                  Fluttertoast.showToast(
-                    msg: 'Failed to update profile: $error',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1B6A3D),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(
+                    labelText: "First Name",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your first name";
+                    }
+                    return null;
+                  },
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 50,
-                  vertical: 15,
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(
+                    labelText: "Last Name",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your last name";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              child: const Text(
-                'Save Changes',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
+                    labelText: "Address",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your address";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(
+                    labelText: "Phone",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your phone number";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                DropdownButtonFormField<String>(
+                  value: _selectedGender,
+                  decoration: const InputDecoration(
+                    labelText: "Gender",
+                    border: OutlineInputBorder(),
+                  ),
+                  items: ['male', 'female', '']
+                      .map((gender) => DropdownMenuItem(
+                            value: gender,
+                            child: Text(gender),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select your gender";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () => _pickBirthdate(context),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: "Birthdate",
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(Icons.calendar_today),
+                      ),
+                      controller: TextEditingController(text: _birthDate),
+                      validator: (value) {
+                        if (_selectedBirthdate == null) {
+                          return "Please select your birthdate";
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Profile updated successfully!"),
+                          ),
+                        );
+                        authenticationController.updateProfile(
+                          address: _addressController.text,
+                          firstName: _firstNameController,
+                          lastName: _lastNameController,
+                          phone: _phoneController,
+                          id: authenticationController.currentUser.id,
+                          birthDate: _birthDate!,
+                          gender: _selectedGender!,
+                          context: context,
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1B6A3D),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    super.dispose();
   }
 }

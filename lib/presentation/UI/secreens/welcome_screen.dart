@@ -22,7 +22,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Optionally pre-check auto-login during init
   }
 
   Future<void> handleNavigation(BuildContext context) async {
@@ -32,7 +31,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     bool res = true;
 
-    // Initialize authentication controller
     Get.put(AuthenticationController());
     final AuthenticationController authController = Get.find();
 
@@ -64,13 +62,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       isLoading = false;
     });
 
-    // Navigate to the appropriate screen
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => res ? const HomeScreen() : const LoginScreen(),
-      ),
-    );
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => res ? const HomeScreen() : const LoginScreen(),
+        ),
+      );
+    });
   }
 
   @override

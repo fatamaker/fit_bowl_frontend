@@ -159,10 +159,18 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       required String lastName,
       required String phone,
       required String address,
+      required String gender,
       required DateTime birthDate}) async {
     try {
       await authenticationRemoteDataSource.updateUser(
-          id, firstName, lastName, phone, address, birthDate);
+        id,
+        firstName,
+        lastName,
+        phone,
+        gender,
+        address,
+        birthDate,
+      );
       return const Right(unit);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

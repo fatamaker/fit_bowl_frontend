@@ -45,6 +45,8 @@ dependencies:
   dot_navigation_bar: ^1.0.2
   image_picker: ^1.1.2
   http_parser: ^4.1.2
+  intl: ^0.20.1
+  path: ^1.9.0
  
 
 dev_dependencies:
@@ -72,6 +74,8 @@ flutter:
   assets:
     - assetes/salde-removebg.png
     - assetes/Boulangerie_Grissol_Croutons_Spring_Mix_Salad_Recipe-removebg-preview.png
+    - assetes/téléchargement__6_-removebg.png
+    - assetes/userImage.jpg
    
 
   # To add assets to your application, add an assets section, like this:

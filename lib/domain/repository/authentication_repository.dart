@@ -37,6 +37,7 @@ abstract class AuthenticationRepository {
     required String lastName,
     required String phone,
     required String address,
+    required String gender,
     required DateTime birthDate,
   });
 

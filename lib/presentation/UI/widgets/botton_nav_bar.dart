@@ -17,11 +17,9 @@ class BottomNavBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 35),
+          padding: const EdgeInsets.symmetric(vertical: 30),
           child: DotNavigationBar(
             margin: const EdgeInsets.all(8),
-            itemPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutQuint,
             marginR: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),

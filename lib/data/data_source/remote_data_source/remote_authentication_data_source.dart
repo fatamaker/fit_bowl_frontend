@@ -40,6 +40,7 @@ abstract class AuthenticationRemoteDataSource {
     String lastName,
     String phone,
     String gender,
+    String address,
     DateTime birthDate,
   );
 
@@ -217,7 +218,7 @@ class AuthenticationRemoteDataSourceImpl
       final uri = Uri.parse('${APIConst.userProfile}/$userId');
       final res = await http.get(uri);
       if (res.statusCode == 200) {
-        final body = json.decode(res.body);
+        final body = json.decode(res.body)["user"];
 
         return UserModel.fromJson(body);
       } else if (res.statusCode == 404) {
@@ -233,8 +234,7 @@ class AuthenticationRemoteDataSourceImpl
   @override
   Future<void> updateImage(String userID, File file) async {
     try {
-      final url =
-          Uri.parse(APIConst.updateUserImage); // Replace with your API endpoint
+      final url = Uri.parse(APIConst.updateUserImage);
       // Create a multipart request
       var request = http.MultipartRequest('POST', url);
       // Add fields
@@ -276,9 +276,6 @@ class AuthenticationRemoteDataSourceImpl
   Future<void> updatePassword(
       String userId, String oldPassword, String newPassword) async {
     try {
-      // AppLocalizations t =
-      //     await AppLocalizations.delegate.load(Locale(await locale));
-
       Map<String, dynamic> requestData = {
         'id': userId,
         'oldPassword': oldPassword,
@@ -288,7 +285,7 @@ class AuthenticationRemoteDataSourceImpl
       String authToken = await token.then((value) => value!.token);
 
       final url = Uri.parse(APIConst.updatePassword);
-      final res = await http.post(
+      final res = await http.put(
         url,
         headers: {
           'Content-Type': 'application/json',
@@ -313,16 +310,19 @@ class AuthenticationRemoteDataSourceImpl
     String id,
     String firstName,
     String lastName,
+    String adresse,
     String phone,
-    String address,
+    String gender,
     DateTime birthDate,
   ) async {
     try {
       Map<String, dynamic> userModel = {
+        'id': id,
         'firstName': firstName,
         'lastName': lastName,
+        'adresse': adresse,
         'phone': phone,
-        'address': address,
+        'gender': gender,
         'birthDate': birthDate.toString(),
       };
 

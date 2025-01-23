@@ -36,19 +36,8 @@ class ProductItem extends StatelessWidget {
                 topRight: Radius.circular(15),
               ),
               child: Image.network(
-                product.image ?? '',
-                width: double.infinity,
-                height: 120.h,
+                product.image!,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image_not_supported,
-                    color: Colors.grey,
-                    size: 50,
-                  ),
-                ),
               ),
             ),
             Expanded(
@@ -76,8 +65,8 @@ class ProductItem extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: ProductSize.calories! > 300
-                            ? Colors.green
-                            : Colors.red,
+                            ? const Color.fromARGB(255, 26, 83, 28)
+                            : const Color.fromARGB(255, 125, 33, 33),
                         fontWeight: FontWeight.w600,
                       ),
                     ),

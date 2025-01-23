@@ -115,6 +115,7 @@ class OtpScreen extends StatelessWidget {
                 onPressed: () async {
                   final AuthenticationController controller = Get.find();
                   TextEditingController otpCode = getCombinedOTPController();
+                  // ignore: avoid_print
                   print("Entered OTP: $otpCode");
                   await controller.verifyOTP(otpCode, context);
                 },

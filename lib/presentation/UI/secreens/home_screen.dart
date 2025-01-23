@@ -1,7 +1,9 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
+
 import 'package:fit_bowl_2/presentation/UI/secreens/shop_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/widgets/botton_nav_bar.dart';
 import 'package:get/get.dart';
@@ -23,7 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // Define pages
   final List<Widget> _pages = [
     const ShopScreen(),
-    const CartScreen(),
+    const WishlistPage(
+      wishlistItems: [],
+    ),
     ProfileScreen(),
   ];
 
@@ -150,45 +154,127 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 ),
                 // command history
-                const Padding(
-                  padding: EdgeInsets.only(left: 25.0),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.shopping_cart_rounded,
-                      color: Color.fromARGB(255, 61, 60, 60),
-                    ),
-                    title: Text(
-                      'command history',
-                      style: TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistoryPage(
+                            orderHistoryItems: [
+                              {
+                                'orderId': 1,
+                                'product': 'Item 1',
+                                'quantity': 2,
+                                'totalPrice': 29.99,
+                                'date': '2025-01-20',
+                              },
+                              {
+                                'orderId': 2,
+                                'product': 'Item 2',
+                                'quantity': 1,
+                                'totalPrice': 15.50,
+                                'date': '2025-01-18',
+                              },
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.shopping_cart_rounded,
+                        color: Color.fromARGB(255, 61, 60, 60),
+                      ),
+                      title: Text(
+                        'order history',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                      ),
                     ),
                   ),
                 ),
                 // About page
-                const Padding(
-                  padding: EdgeInsets.only(left: 25.0),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.info_outline,
-                      color: Color.fromARGB(255, 61, 60, 60),
-                    ),
-                    title: Text(
-                      'FAQ',
-                      style: TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistoryPage(
+                            orderHistoryItems: [
+                              {
+                                'orderId': 1,
+                                'product': 'Item 1',
+                                'quantity': 2,
+                                'totalPrice': 29.99,
+                                'date': '2025-01-20',
+                              },
+                              {
+                                'orderId': 2,
+                                'product': 'Item 2',
+                                'quantity': 1,
+                                'totalPrice': 15.50,
+                                'date': '2025-01-18',
+                              },
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.info_outline,
+                        color: Color.fromARGB(255, 61, 60, 60),
+                      ),
+                      title: Text(
+                        'FAQ',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                      ),
                     ),
                   ),
                 ),
 
                 // categorys
-                const Padding(
-                  padding: EdgeInsets.only(left: 25.0),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.category_outlined,
-                      color: Color.fromARGB(255, 61, 60, 60),
-                    ),
-                    title: Text(
-                      'categorys',
-                      style: TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistoryPage(
+                            orderHistoryItems: [
+                              {
+                                'orderId': 1,
+                                'product': 'Item 1',
+                                'quantity': 2,
+                                'totalPrice': 29.99,
+                                'date': '2025-01-20',
+                              },
+                              {
+                                'orderId': 2,
+                                'product': 'Item 2',
+                                'quantity': 1,
+                                'totalPrice': 15.50,
+                                'date': '2025-01-18',
+                              },
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.category_outlined,
+                        color: Color.fromARGB(255, 61, 60, 60),
+                      ),
+                      title: Text(
+                        'categorys',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                      ),
                     ),
                   ),
                 ),

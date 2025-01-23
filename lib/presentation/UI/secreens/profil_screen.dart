@@ -1,6 +1,8 @@
 import 'package:fit_bowl_2/presentation/UI/secreens/edit_profile_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/update_password.dart';
+import 'package:fit_bowl_2/presentation/UI/widgets/image_container.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,22 +11,21 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the instance of AuthenticationController using Get.find()
-    // ignore: unused_local_variable
-    final AuthenticationController authenticationController = Get.find();
-
     return Scaffold(
       backgroundColor: const Color(0xFFF3F6ED),
       body: Center(
         child: GetBuilder<AuthenticationController>(
-          // Set the ID for GetBuilder to update only when this controller changes
           builder: (controller) {
-            // Access the currentUser from the controller
             final currentUser = controller.currentUser;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Profile Image
+                ImageContainer(imageUrl: currentUser.imageUrl),
+
+                const SizedBox(height: 20),
+
                 // Name and Email
                 Text(
                   currentUser.firstName,
@@ -58,8 +59,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfileScreen(), // Replace with your Edit screen
+                        builder: (context) => const EditProfilePage(),
                       ),
                     );
                   },
@@ -84,8 +84,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            UpdatePasswordScreen(), // Replace with your Edit screen
+                        builder: (context) => UpdatePasswordScreen(),
                       ),
                     );
                   },
