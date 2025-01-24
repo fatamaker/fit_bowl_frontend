@@ -80,7 +80,7 @@ class AuthenticationRemoteDataSourceImpl
           address: adresse,
           phone: "",
           gender: "",
-          //birthDate: "",
+          birthDate: birthDate,
           password: password);
       Map<String, dynamic> requestData = userModel.toJson();
       // Parse the URL

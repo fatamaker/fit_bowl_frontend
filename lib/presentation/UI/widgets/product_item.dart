@@ -36,7 +36,7 @@ class ProductItem extends StatelessWidget {
                 topRight: Radius.circular(15),
               ),
               child: Image.network(
-                product.image!,
+                product.image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -73,7 +73,7 @@ class ProductItem extends StatelessWidget {
 
                     // Product Description
                     Text(
-                      product.description ?? 'No description available',
+                      product.reference ?? 'No description available',
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: Colors.grey[700],

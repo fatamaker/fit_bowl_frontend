@@ -274,13 +274,13 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> updateProfile(
-      {required String address,
-      required TextEditingController firstName,
+      {required TextEditingController firstName,
       required TextEditingController lastName,
+      required String address,
       required TextEditingController phone,
       required id,
-      required String birthDate,
       required String gender,
+      required String birthDate,
       required BuildContext context}) async {
     String message = '';
     final res = await UpdateUserUsecase(sl())(

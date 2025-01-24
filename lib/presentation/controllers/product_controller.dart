@@ -15,6 +15,17 @@ class ProductController extends GetxController {
   Product? selectedProduct;
   bool isLoading = false;
   String errorMessage = '';
+  String currentCategory = 'all';
+
+  int selectedQuantity = 1;
+  List<bool> selectedAddOns = [];
+
+  String selectedSize = ''; // Keep the selected size in a regular variable.
+
+  void resetCategoryFilter() {
+    categoryProducts = List.from(allProducts);
+    update();
+  }
 
   // Fetch all products
   Future<bool> getAllProducts() async {
@@ -85,10 +96,15 @@ class ProductController extends GetxController {
     return true;
   }
 
+  // Method to select size
+  void selectSize(String size) {
+    selectedSize = size; // Store the selected size.
+  }
+
   // Fetch a single product by ID
   Future<bool> getProductById(String id) async {
     isLoading = true;
-    update();
+
     final res = await GetProductByIdUseCase(sl())(id);
     isLoading = false;
 

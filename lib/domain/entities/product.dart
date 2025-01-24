@@ -1,7 +1,7 @@
 class Product {
-  final String? id;
+  final String id;
   final String? name;
-  final String? image;
+  final String image;
   final String? model3d;
   final String? reference;
   final String? description;
@@ -10,9 +10,9 @@ class Product {
   final ProductSize? sizes;
 
   Product({
-    this.id,
+    required this.id,
     this.name,
-    this.image,
+    required this.image,
     this.model3d,
     this.reference,
     this.description,

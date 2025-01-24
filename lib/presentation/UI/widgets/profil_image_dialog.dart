@@ -31,7 +31,7 @@ class ProfileImageDialog extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 80,
                     backgroundImage: controller.userImage == ''
-                        ? Image.asset('assetes/userImage.jpeg').image
+                        ? Image.asset('assetes/userImage.jpg').image
                         : controller.f == null
                             ? NetworkImage(controller.userImage)
                             : Image.file(controller.f!).image,

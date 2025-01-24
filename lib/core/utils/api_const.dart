@@ -31,7 +31,7 @@ class APIConst {
   static const deleteSale = '$baseUrl/sales/delete/:id';
 
   //supplement
-  static const oneSupplement = '$baseUrl/supp/:id';
+  static const oneSupplement = '$baseUrl/supp';
 
   //wishlist
   static const createWishlist = '$baseUrl/wishlist/add';

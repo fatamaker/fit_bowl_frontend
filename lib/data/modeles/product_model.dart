@@ -2,9 +2,9 @@ import '../../domain/entities/product.dart';
 
 class ProductModel extends Product {
   ProductModel({
-    super.id,
+    required super.id,
     super.name,
-    super.image,
+    required super.image,
     super.model3d,
     super.reference,
     super.description,

@@ -188,13 +188,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                         );
                         authenticationController.updateProfile(
-                          address: _addressController.text,
                           firstName: _firstNameController,
                           lastName: _lastNameController,
+                          address: _addressController.text,
                           phone: _phoneController,
                           id: authenticationController.currentUser.id,
-                          birthDate: _birthDate!,
                           gender: _selectedGender!,
+                          birthDate: _birthDate!,
                           context: context,
                         );
                       }

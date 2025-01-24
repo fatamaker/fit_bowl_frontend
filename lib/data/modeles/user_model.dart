@@ -24,10 +24,11 @@ class UserModel extends User {
       address: json['address'] ?? '',
       phone: json['phone'] ?? '',
       password: json['password'] ?? '',
-      gender: json['gender'] ?? 'Not Specified',
+      gender: json['gender'] ?? '',
       birthDate: json['birthDate'] != null
           ? DateTime.parse(json['birthDate'])
-          : null, // Handle null date
+          : DateTime.parse(
+              "2020-07-17T03:18:31.177769-04:00"), // Handle null date
     );
   }
 
@@ -40,7 +41,7 @@ class UserModel extends User {
       'address': address,
       'phone': phone,
       'password': password,
-      'gender': gender!.isEmpty ? 'Not Specified' : gender,
+      'gender': gender!.isEmpty ? '' : gender,
       'birthDate': birthDate?.toIso8601String(),
     };
   }

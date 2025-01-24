@@ -1,5 +1,7 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/category_product_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/saladepage.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
@@ -201,24 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const OrderHistoryPage(
-                            orderHistoryItems: [
-                              {
-                                'orderId': 1,
-                                'product': 'Item 1',
-                                'quantity': 2,
-                                'totalPrice': 29.99,
-                                'date': '2025-01-20',
-                              },
-                              {
-                                'orderId': 2,
-                                'product': 'Item 2',
-                                'quantity': 1,
-                                'totalPrice': 15.50,
-                                'date': '2025-01-18',
-                              },
-                            ],
-                          ),
+                          builder: (context) => const Saladepage(),
                         ),
                       );
                     },
@@ -244,24 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const OrderHistoryPage(
-                            orderHistoryItems: [
-                              {
-                                'orderId': 1,
-                                'product': 'Item 1',
-                                'quantity': 2,
-                                'totalPrice': 29.99,
-                                'date': '2025-01-20',
-                              },
-                              {
-                                'orderId': 2,
-                                'product': 'Item 2',
-                                'quantity': 1,
-                                'totalPrice': 15.50,
-                                'date': '2025-01-18',
-                              },
-                            ],
-                          ),
+                          builder: (context) => CategoryProductScreen(),
                         ),
                       );
                     },
