@@ -7,7 +7,7 @@ class CreateAccountUsecase {
 
   const CreateAccountUsecase(this._authenticationRepository);
 
-  Future<Either<Failure, Unit>> call(
+  Future<Either<Failure, String>> call(
           {required String firstName,
           required String lastName,
           required String imageUrl,

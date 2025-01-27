@@ -124,12 +124,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     labelText: "Phone",
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter your phone number";
-                    }
-                    return null;
-                  },
                 ),
                 const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
@@ -167,12 +161,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         suffixIcon: Icon(Icons.calendar_today),
                       ),
                       controller: TextEditingController(text: _birthDate),
-                      validator: (value) {
-                        if (_selectedBirthdate == null) {
-                          return "Please select your birthdate";
-                        }
-                        return null;
-                      },
                     ),
                   ),
                 ),

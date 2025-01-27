@@ -15,7 +15,7 @@ import 'package:fit_bowl_2/data/modeles/user_model.dart';
 import 'package:http_parser/http_parser.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<void> createAccount(
+  Future<String> createAccount(
     String firstName,
     String lastName,
     String imageUrl,
@@ -60,7 +60,7 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<void> createAccount(
+  Future<String> createAccount(
       String firstName,
       String lastName,
       String imageUrl,
@@ -234,6 +234,7 @@ class AuthenticationRemoteDataSourceImpl
   @override
   Future<void> updateImage(String userID, File file) async {
     try {
+      print('File path: ${file.path}');
       final url = Uri.parse(APIConst.updateUserImage);
       // Create a multipart request
       var request = http.MultipartRequest('POST', url);

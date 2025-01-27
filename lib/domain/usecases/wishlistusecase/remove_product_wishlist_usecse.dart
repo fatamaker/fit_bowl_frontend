@@ -9,6 +9,6 @@ class RemoveProductWishlistUsecse {
   const RemoveProductWishlistUsecse(this._repository);
 
   Future<Either<Failure, Wishlist>> call(String userId, String productId) {
-    return _repository.updateWishList(userId, productId as List<String>);
+    return _repository.removeProductFromWishList(userId, productId);
   }
 }

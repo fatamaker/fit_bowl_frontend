@@ -136,9 +136,9 @@ class _SaladeScreenState extends State<SaladeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // // Supplement options
-            // ...product.suppIds?.map((id) => _buildAddOnOption(id)) ?? [],
-            // const SizedBox(height: 30),
+            // Supplement options
+            ...product.suppIds?.map((id) => _buildAddOnOption(id)) ?? [],
+            const SizedBox(height: 30),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -3,6 +3,7 @@ import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/saladepage.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
+
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -26,10 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Define pages
   final List<Widget> _pages = [
-    const ShopScreen(),
-    const WishlistPage(
-      wishlistItems: [],
-    ),
+    ShopScreen(),
+    const WishlistPage(),
     ProfileScreen(),
   ];
 
@@ -41,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String userName = "John Doe"; // Replace with actual user name
-    final String profileImageUrl = 'assetes/salde-removebg.png';
     return Scaffold(
       extendBody: true,
       backgroundColor: const Color(0xFFF3F6ED),
@@ -125,31 +122,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.zero,
                   child: Container(
                     color: Color(0xFFD9D9D9),
-                    child: Row(
-                      children: [
-                        // Profile Picture
-                        Padding(
-                          padding: const EdgeInsets.all(25.0),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: AssetImage(
-                                profileImageUrl), // Load profile image
+                    child: GetBuilder<AuthenticationController>(
+                        builder: (controller) {
+                      final currentUser = controller.currentUser;
+                      return Row(
+                        children: [
+                          // Profile Picture
+                          Padding(
+                            padding: const EdgeInsets.all(25.0),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(
+                                currentUser.imageUrl!,
+                              ), // Load profile image from URL
+                            ),
                           ),
-                        ),
-                        // User Name
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            userName,
+
+                          Text(
+                            '${currentUser.firstName}  ${currentUser.lastName}', // Combine first and last name
                             style: TextStyle(
                               fontFamily: 'LilitaOne',
-                              fontSize: 18,
+                              fontSize: 23,
                               color: const Color.fromARGB(255, 13, 11, 11),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    }),
                   ),
                 ),
                 Padding(

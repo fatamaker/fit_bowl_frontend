@@ -7,7 +7,7 @@ import 'package:fit_bowl_2/domain/entities/token.dart';
 import 'package:fit_bowl_2/domain/entities/user.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<Failure, Unit>> createAccount(
+  Future<Either<Failure, String>> createAccount(
       {required String firstName,
       required String lastName,
       required String imageUrl,

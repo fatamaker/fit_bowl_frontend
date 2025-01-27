@@ -11,16 +11,13 @@ class WishlistRepositoryImpl implements WishlistRepository {
   WishlistRepositoryImpl({required this.wishlistRemoteDataSource});
 
   @override
-  Future<Either<Failure, Wishlist>> createWishList(
-      Map<String, dynamic> wishlistData) async {
+  Future<Either<Failure, Unit>> createWishList({required String userId}) async {
     try {
-      final wishlist =
-          await wishlistRemoteDataSource.createWishlist(wishlistData);
-      return Right(wishlist);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (e) {
-      return Left(UnknownFailure(message: e.toString()));
+      // ignore: unused_local_variable
+      final res = await wishlistRemoteDataSource.createWishList(userId: userId);
+      return Right(unit);
+    } on RegistrationException catch (e) {
+      return Left(RegistrationFailure(e.message));
     }
   }
 

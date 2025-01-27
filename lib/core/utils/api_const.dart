@@ -34,7 +34,8 @@ class APIConst {
   static const oneSupplement = '$baseUrl/supp';
 
   //wishlist
-  static const createWishlist = '$baseUrl/wishlist/add';
+  static const createWishList = '$baseUrl/wishList/create';
+
   static const getWishlist = '$baseUrl/wishlist/get';
   static const updateWishlist = '$baseUrl/wishlist/update';
   static const deleteWishlist = '$baseUrl/wishlist/delete';
@@ -49,5 +50,5 @@ class APIConst {
   static const forgetPassword = '$baseUrl/forgetPassword';
   static const resetPassword = '$baseUrl/Resetpassword';
   static const verfifCode = '$baseUrl/VerifCode';
-  static const updateUserImage = '$baseUrl/updateUserImage';
+  static const updateUserImage = '$baseUrl/updateImage';
 }

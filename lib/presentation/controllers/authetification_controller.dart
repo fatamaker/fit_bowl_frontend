@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fit_bowl_2/domain/usecases/wishlistusecase/create_wishlistusecase.dart';
 import 'package:path/path.dart';
 import 'package:fit_bowl_2/core/utils/string_const.dart';
 import 'package:fit_bowl_2/di.dart';
@@ -63,34 +64,34 @@ class AuthenticationController extends GetxController {
     update(['terms']);
   }
 
-  Future<void> pickImage() async {
-    try {
-      final img = await _picker.pickImage(source: ImageSource.gallery);
-      if (img != null) {
-        final f = File(img.path);
-        setuserImage(basename(f.path));
-      } else {
-        // ignore: avoid_print
-        print("No image selected");
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print("Error while picking image: $e");
-    }
-  }
-
   // Future<void> pickImage() async {
   //   try {
-  //     img = await _picker.pickImage(source: ImageSource.gallery);
+  //     final img = await _picker.pickImage(source: ImageSource.gallery);
   //     if (img != null) {
-  //       f = File(img!.path);
-  //       setuserImage(basename(f!.path));
+  //       final f = File(img.path);
+  //       setuserImage(basename(f.path));
+  //     } else {
+  //       // ignore: avoid_print
+  //       print("No image selected");
   //     }
   //   } catch (e) {
   //     // ignore: avoid_print
-  //     print(e);
+  //     print("Error while picking image: $e");
   //   }
   // }
+
+  Future<void> pickImage() async {
+    try {
+      img = await _picker.pickImage(source: ImageSource.gallery);
+      if (img != null) {
+        f = File(img!.path);
+        setuserImage(basename(f!.path));
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
 
   void setuserImage(String image) {
     userImage = image;
@@ -119,9 +120,9 @@ class AuthenticationController extends GetxController {
     String userid = "";
     String message = '';
     res.fold((l) => message = l.message!, (r) async {
-      message = "Account created!";
+      print("Response from create account: $r");
+      await CreateWishListUseCase(sl())(userId: r);
 
-      // await CreateWishListUsecase(sl())(userId: r);
       // await CreateCartUsecase(sl())(userId: r);
 
       email.clear();
@@ -172,18 +173,18 @@ class AuthenticationController extends GetxController {
       // ignore: unused_local_variable
       final userRes = await getCurrentUser(r.userId);
       // ignore: use_build_context_synchronously
-      return Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()));
-      // await getOneUser(r.userId).then((value) async {
+      //  await getOneUser(r.userId).then((value) async {
       //   final WishListController wishListController = Get.find();
-      //   final CartController cartController = Get.find();
+      //   // final CartController cartController = Get.find();
       //   // final CategoryController categorControlller = Get.find();
       //   final AuthenticationController authController = Get.find();
       //   await wishListController
       //       .getUserWishlist(authController.currentUser.id!);
-      //   await cartController.getUserCart(authController.currentUser.id!);
-      //
+      //   // await cartController.getUserCart(authController.currentUser.id!);
+
       // });
+      return Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
     isLoading = false;
     update();

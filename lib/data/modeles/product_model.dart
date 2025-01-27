@@ -41,6 +41,7 @@ class ProductSizeModel extends ProductSize {
 class SizeInfoModel extends SizeInfo {
   SizeInfoModel({required super.price, super.calories});
 
-  factory SizeInfoModel.fromJson(Map<String, dynamic> json) =>
-      SizeInfoModel(price: json["price"], calories: json["calories"]);
+  factory SizeInfoModel.fromJson(Map<String, dynamic> json) => SizeInfoModel(
+      price: double.parse(json["price"].toString()),
+      calories: json["calories"]);
 }
