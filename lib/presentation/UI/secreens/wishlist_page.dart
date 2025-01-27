@@ -61,11 +61,11 @@ class _WishlistPageState extends State<WishlistPage> {
       isLoading = true;
     });
 
-    final productIds = _wishlistController.userWishlist?.productIds;
+    final productIds = _wishlistController.userWishlist?.productIds ?? [];
 
-    if (productIds!.isEmpty) {
+    if (productIds.isEmpty) {
       setState(() {
-        wishlistProducts = []; // No products to display
+        wishlistProducts = [];
         isLoading = false;
       });
       return;
@@ -73,7 +73,7 @@ class _WishlistPageState extends State<WishlistPage> {
 
     List<Product?> fetchedProducts = [];
 
-    for (String productId in productIds) {
+    for (String productId in productIds!) {
       final success = await _productController.getProductById(productId);
       print(success);
       if (success && _productController.selectedProduct != null) {
@@ -211,9 +211,10 @@ class WishlistCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFD9D9D9),
+      color: const Color.fromARGB(203, 197, 255, 193),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
+      elevation: 4.0,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

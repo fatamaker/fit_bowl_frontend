@@ -1,3 +1,5 @@
+import 'package:fit_bowl_2/data/modeles/supplement_model.dart';
+
 class Product {
   final String id;
   final String? name;
@@ -6,7 +8,7 @@ class Product {
   final String? reference;
   final String? description;
   final String? category;
-  final List<String>? suppIds;
+  final List<SupplementModel>? suppId;
   final ProductSize? sizes;
 
   Product({
@@ -17,7 +19,7 @@ class Product {
     this.reference,
     this.description,
     this.category,
-    this.suppIds,
+    this.suppId,
     this.sizes,
   });
 }

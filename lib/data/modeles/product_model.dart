@@ -1,3 +1,5 @@
+import 'package:fit_bowl_2/data/modeles/supplement_model.dart';
+
 import '../../domain/entities/product.dart';
 
 class ProductModel extends Product {
@@ -9,7 +11,7 @@ class ProductModel extends Product {
     super.reference,
     super.description,
     super.category,
-    super.suppIds,
+    super.suppId,
     super.sizes,
   });
 
@@ -22,8 +24,9 @@ class ProductModel extends Product {
         reference: json['reference'],
         description: json['description'],
         category: json['category'],
-        suppIds:
-            (json['SuppId'] as List<dynamic>).map((e) => e.toString()).toList(),
+        suppId: (json['SuppId'] as List<dynamic>)
+            .map((e) => SupplementModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
         sizes: ProductSizeModel.fromJson(json['sizes']));
   }
 }

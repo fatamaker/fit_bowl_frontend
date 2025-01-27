@@ -339,16 +339,25 @@ class _ProductItemState extends State<ProductItem> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: Container(
-        height: 200, // Fixed height to prevent overflow
+        height: 200,
+        // Fixed height to prevent overflow
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(255, 255, 255, 255),
+
           borderRadius: BorderRadius.circular(15),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.2),
+          //     spreadRadius: 2,
+          //     blurRadius: 5,
+          //     offset: const Offset(0, 3),
+          //   ), ],
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
+              color: Colors.black.withOpacity(0.3), // Shadow color with opacity
+              offset: const Offset(0, 4), // Shadow position
+              blurRadius: 5, // Blur radius
+              spreadRadius: 2, // Spread radius
             ),
           ],
         ),

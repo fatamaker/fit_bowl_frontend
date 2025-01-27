@@ -13,7 +13,7 @@ class SupplementModel extends Supplement {
       id: json['_id'],
       name: json['name'],
       price: json['price'].toDouble(),
-      calories: json['calories'],
+      calories: json['calories'].toDouble(),
     );
   }
 

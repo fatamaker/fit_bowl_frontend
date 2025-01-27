@@ -175,7 +175,6 @@
 //   }
 // }
 
-import 'package:dartz/dartz.dart';
 import 'package:fit_bowl_2/di.dart';
 import 'package:fit_bowl_2/domain/usecases/productusecase/get_all_products_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/productusecase/get_productbyid_usecase.dart';
@@ -190,11 +189,15 @@ class ProductController extends GetxController {
 
   // Fetch all products
   Future<bool> getAllProducts() async {
+    if (allProducts.isNotEmpty) {
+      return false;
+    }
     final res = await GetAllProductsUseCase(sl())();
     return res.fold(
       (failure) => false,
       (products) {
         allProducts = products;
+
         filteredProducts = products; // Initially display all products
 
         return true;

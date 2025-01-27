@@ -233,11 +233,16 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
+  final CategoryController categoryController = Get.put(CategoryController());
+  final ProductController productController = Get.put(ProductController());
+  @override
+  void initState() {
+    categoryController.selectedCategory = 'all';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final CategoryController categoryController = Get.put(CategoryController());
-    final ProductController productController = Get.put(ProductController());
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -264,13 +269,12 @@ class _ShopScreenState extends State<ShopScreen> {
                             } else {
                               // Add "All" category at the beginning
                               final List<Map<String, dynamic>> categories = [
-                                {'id': 'all', 'title': 'All'},
+                                {'id': 'all', 'title': 'all'},
                                 ...categoryController.allCategories
                                     .map((category) => {
                                           'id': category.id,
                                           'title': category.title,
-                                        })
-                                    .toList(),
+                                        }),
                               ];
 
                               return Padding(

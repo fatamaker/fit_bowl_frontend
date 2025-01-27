@@ -2,7 +2,7 @@ class Supplement {
   final String id;
   final String name;
   final double price;
-  final int? calories;
+  final double? calories;
 
   Supplement({
     required this.id,
