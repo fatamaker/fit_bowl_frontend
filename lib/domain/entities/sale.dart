@@ -4,6 +4,8 @@ class Sale {
   final String userId;
   final int quantity;
   final double totalPrice;
+  final double totalCalories;
+  final List<String> supplements;
 
   Sale({
     required this.id,
@@ -11,5 +13,7 @@ class Sale {
     required this.userId,
     required this.quantity,
     required this.totalPrice,
+    required this.totalCalories,
+    required this.supplements,
   });
 }

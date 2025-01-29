@@ -11,9 +11,7 @@ class WishlistModel extends Wishlist {
     return WishlistModel(
       id: json['_id'],
       userId: json['userId'],
-
-      productIds: List<String>.from(
-          json['productIds']), // Ensure this matches API's response
+      productIds: List<String>.from(json['productIds']),
     );
   }
 

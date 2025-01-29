@@ -1,5 +1,9 @@
 import 'dart:io';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/create_cart_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/wishlistusecase/create_wishlistusecase.dart';
+import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
+import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:fit_bowl_2/core/utils/string_const.dart';
 import 'package:fit_bowl_2/di.dart';
@@ -20,7 +24,6 @@ import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/otp_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/reset_passwordScreen.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -121,9 +124,9 @@ class AuthenticationController extends GetxController {
     String message = '';
     res.fold((l) => message = l.message!, (r) async {
       print("Response from create account: $r");
-      await CreateWishListUseCase(sl())(userId: r);
 
-      // await CreateCartUsecase(sl())(userId: r);
+      await CreateCartUseCase(sl())(userId: r);
+      await CreateWishListUseCase(sl())(userId: r);
 
       email.clear();
       password.clear();
@@ -172,15 +175,18 @@ class AuthenticationController extends GetxController {
       password.clear();
       // ignore: unused_local_variable
       final userRes = await getCurrentUser(r.userId);
+
+      final CartController cartController = Get.find();
+      await cartController.getCartByUserId(currentUser.id!);
+      final WishlistController wishListController = Get.find();
+
+      await wishListController.getWishlistByUserId(currentUser.id!);
       // ignore: use_build_context_synchronously
       //  await getOneUser(r.userId).then((value) async {
-      //   final WishListController wishListController = Get.find();
-      //   // final CartController cartController = Get.find();
+
+      //
       //   // final CategoryController categorControlller = Get.find();
       //   final AuthenticationController authController = Get.find();
-      //   await wishListController
-      //       .getUserWishlist(authController.currentUser.id!);
-      //   // await cartController.getUserCart(authController.currentUser.id!);
 
       // });
       return Navigator.of(context).pushReplacement(

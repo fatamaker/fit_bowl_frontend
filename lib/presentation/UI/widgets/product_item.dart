@@ -283,6 +283,9 @@ import 'package:get/get.dart';
 //   }
 // }
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 class ProductItem extends StatefulWidget {
   final Product product;
 
@@ -296,7 +299,7 @@ class ProductItem extends StatefulWidget {
 }
 
 class _ProductItemState extends State<ProductItem> {
-  late bool isInWishlist; // Track whether the product is in the wishlist
+  late bool isInWishlist;
 
   @override
   void initState() {
@@ -337,157 +340,138 @@ class _ProductItemState extends State<ProductItem> {
     final ProductSize = widget.product.sizes?.small;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-      child: Container(
-        height: 200,
-        // Fixed height to prevent overflow
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
-
-          borderRadius: BorderRadius.circular(15),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.grey.withOpacity(0.2),
-          //     spreadRadius: 2,
-          //     blurRadius: 5,
-          //     offset: const Offset(0, 3),
-          //   ), ],
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3), // Shadow color with opacity
-              offset: const Offset(0, 4), // Shadow position
-              blurRadius: 5, // Blur radius
-              spreadRadius: 2, // Spread radius
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Image (Circular)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ClipOval(
-                      child: Image.network(
-                        widget.product.image,
-                        height: 80, // Adjusted size
-                        width: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Product Details
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Product Name
-                      Text(
-                        widget.product.name ?? 'No name available',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 5),
-                      // Calories
-                      Text(
-                        '${ProductSize?.calories ?? 0} Cal',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: (ProductSize?.calories ?? 0) > 300
-                              ? const Color.fromARGB(255, 125, 33, 33)
-                              : const Color.fromARGB(255, 49, 137, 52),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      // Product Description
-                      Text(
-                        widget.product.reference ?? 'No description available',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.grey[700],
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 18.0),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Card Layout
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
-            // Price and Favorite Icon (Floating)
-            Positioned(
-              bottom: 10,
-              left: 10,
-              child: Text(
-                '${ProductSize?.price.toStringAsFixed(2) ?? "0.00"}D',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40), // Space for overlapping image
+                  // Product Name
+                  Text(
+                    widget.product.name ?? 'No name available',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  // Calories
+                  Text(
+                    '${ProductSize?.calories ?? 0} Cal',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: (ProductSize?.calories ?? 0) > 300
+                          ? Colors.red
+                          : Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Product Description
+                  Text(
+                    widget.product.reference ?? 'No description available',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Spacer(),
+                  // Price and Favorite Icon
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${ProductSize?.price.toStringAsFixed(2) ?? "0.00"}D',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          if (wishlistId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Failed to fetch wishlist ID'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          // Toggle wishlist status
+                          final success =
+                              await wishlistController.updateWishlist(
+                            wishlistId,
+                            [widget.product.id],
+                          );
+
+                          if (success) {
+                            setState(() {
+                              isInWishlist = !isInWishlist;
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(isInWishlist
+                                    ? '${widget.product.name} added to wishlist!'
+                                    : '${widget.product.name} removed from wishlist!'),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Failed to update wishlist'),
+                              ),
+                            );
+                          }
+                        },
+                        icon: Icon(
+                          isInWishlist ? Icons.favorite : Icons.favorite_border,
+                          color: isInWishlist ? Colors.red : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: IconButton(
-                onPressed: () async {
-                  if (wishlistId == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Failed to fetch wishlist ID'),
-                      ),
-                    );
-                    return;
-                  }
-
-                  // Add or remove from wishlist
-                  final success = await wishlistController.updateWishlist(
-                    wishlistId,
-                    [widget.product.id],
-                  );
-
-                  if (success) {
-                    setState(() {
-                      isInWishlist = !isInWishlist; // Toggle the wishlist state
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(isInWishlist
-                            ? '${widget.product.name} added to wishlist!'
-                            : '${widget.product.name} removed from wishlist!'),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Failed to update wishlist'),
-                      ),
-                    );
-                  }
-                },
-                icon: Icon(
-                  isInWishlist ? Icons.favorite : Icons.favorite_border,
-                  color: isInWishlist ? Colors.red : Colors.grey[600],
-                  size: 20, // Adjust the size as needed
-                ),
-              ),
+          ),
+          // Overlapping Product Image
+          Positioned(
+            top: -30, // Adjust to control the overlap
+            left: 20,
+            right: 20,
+            child: CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(widget.product.image),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

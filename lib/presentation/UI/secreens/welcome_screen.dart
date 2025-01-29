@@ -5,6 +5,7 @@ import 'package:fit_bowl_2/domain/usecases/userusecase/auto_login_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/userusecase/get_user_by_id_usecase.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
@@ -33,6 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     bool res = true;
 
     Get.put(WishlistController());
+    Get.put(CartController());
 
     Get.put(AuthenticationController());
     final AuthenticationController authController = Get.find();

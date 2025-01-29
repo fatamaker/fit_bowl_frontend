@@ -1,10 +1,12 @@
 import 'package:fit_bowl_2/data/data_source/local_data_source/authentication_local_data_source.dart';
+import 'package:fit_bowl_2/data/data_source/remote_data_source/cart_remote_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/category_remote_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/product_remote_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/remote_authentication_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/sale_remote_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/supplement_remote_data_source.dart';
 import 'package:fit_bowl_2/data/data_source/remote_data_source/wishlist_remote_data_source.dart';
+import 'package:fit_bowl_2/data/repository/cart_repository_impl.dart';
 import 'package:fit_bowl_2/data/repository/category_repository_impl.dart';
 import 'package:fit_bowl_2/data/repository/product_repository_impl.dart';
 import 'package:fit_bowl_2/data/repository/sale_repository_impl.dart';
@@ -12,11 +14,17 @@ import 'package:fit_bowl_2/data/repository/supplement_repositorry_impl.dart';
 import 'package:fit_bowl_2/data/repository/user_repository_impl.dart';
 import 'package:fit_bowl_2/data/repository/wishlist_repository_impl.dart';
 import 'package:fit_bowl_2/domain/repository/authentication_repository.dart';
+import 'package:fit_bowl_2/domain/repository/cart_repository.dart';
 import 'package:fit_bowl_2/domain/repository/category_repository.dart';
 import 'package:fit_bowl_2/domain/repository/product_repository.dart';
 import 'package:fit_bowl_2/domain/repository/sales_repository.dart';
 import 'package:fit_bowl_2/domain/repository/supplement_repository.dart';
 import 'package:fit_bowl_2/domain/repository/wishlist_repository.dart';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/add_sale_to_cart_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/clear_cart.dart_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/create_cart_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/get_cart_by_user_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/cartusecase/remove_sale_from_cart_usecase.dart';
 import 'package:fit_bowl_2/domain/usecases/categoryusecase/get_all_categorys_use_case.dart';
 import 'package:fit_bowl_2/domain/usecases/categoryusecase/get_categorybyid_use_case.dart';
 import 'package:fit_bowl_2/domain/usecases/productusecase/get_all_products_usecase.dart';
@@ -41,7 +49,6 @@ import 'package:fit_bowl_2/domain/usecases/wishlistusecase/get_wishlisitbyid_use
 import 'package:fit_bowl_2/domain/usecases/wishlistusecase/remove_product_wishlist_usecse.dart';
 import 'package:fit_bowl_2/domain/usecases/wishlistusecase/update_wishlist_usecase.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart';
 
 final sl = GetIt.instance;
 
@@ -64,6 +71,9 @@ Future<void> init() async {
   sl.registerLazySingleton<SalesRepository>(
       () => SaleRepositoryImpl(saleRemoteDataSource: sl()));
 
+  sl.registerLazySingleton<CartRepository>(
+      () => CartRepositoryImpl(cartRemoteDataSource: sl()));
+
   // /* data sources */
   sl.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImpl());
@@ -82,8 +92,8 @@ Future<void> init() async {
     () => SaleRemoteDataSourceImpl(),
   );
 
-  // sl.registerLazySingleton<CartRemoteDataSource>(
-  //     () => CartRemoteDataSourceImpl());
+  sl.registerLazySingleton<CartRemoteDataSource>(
+      () => CartRemoteDataSourceImpl());
   sl.registerLazySingleton<WishlistRemoteDataSource>(
       () => WishlistRemoteDataSourceImpl());
 
@@ -122,4 +132,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DeleteSaleUseCase(sl()));
   sl.registerLazySingleton(() => GetSaleByIdUseCase(sl()));
   sl.registerLazySingleton(() => UpdateSaleUseCase(sl()));
+
+  //cart//
+  sl.registerLazySingleton(() => AddSaleToCartUseCase(sl()));
+  sl.registerLazySingleton(() => ClearCartUseCase(sl()));
+  sl.registerLazySingleton(() => GetCartByUserUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveSaleFromCartUseCase(sl()));
+  sl.registerLazySingleton(() => CreateCartUseCase(sl()));
 }

@@ -7,6 +7,8 @@ class SaleModel extends Sale {
     required super.userId,
     required super.quantity,
     required super.totalPrice,
+    required super.totalCalories,
+    required super.supplements, // Add supplements parameter
   });
 
   factory SaleModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,9 @@ class SaleModel extends Sale {
       userId: json['userId'],
       quantity: json['quantity'],
       totalPrice: json['totalprice'].toDouble(),
+      totalCalories: json['totalCalories'].toDouble(),
+      supplements: List<String>.from(
+          json['supplements'] ?? []), // Parse supplements list
     );
   }
 
@@ -25,6 +30,8 @@ class SaleModel extends Sale {
       'userId': userId,
       'quantity': quantity,
       'totalprice': totalPrice,
+      'totalCalories': totalCalories,
+      'supplements': supplements, // Include supplements in toJson
     };
   }
 }

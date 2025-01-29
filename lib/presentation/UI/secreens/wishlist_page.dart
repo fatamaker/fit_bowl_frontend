@@ -1,9 +1,13 @@
+import 'package:fit_bowl_2/presentation/UI/widgets/wishlistcard.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
 import 'package:fit_bowl_2/domain/entities/product.dart'; // Ensure correct import for Product entity
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -45,7 +49,6 @@ class _WishlistPageState extends State<WishlistPage> {
     final success =
         await _wishlistController.getWishlistByUserId(currentUserId);
     if (success) {
-      // Fetch products based on the wishlist
       await _loadProducts();
     } else {
       setState(() {
@@ -73,15 +76,10 @@ class _WishlistPageState extends State<WishlistPage> {
 
     List<Product?> fetchedProducts = [];
 
-    for (String productId in productIds!) {
+    for (String productId in productIds) {
       final success = await _productController.getProductById(productId);
-      print(success);
       if (success && _productController.selectedProduct != null) {
-        // Only add the product if it's valid
         fetchedProducts.add(_productController.selectedProduct);
-      } else {
-        // Optionally, handle the case when product is not found
-        print('Product with ID $productId not found.');
       }
     }
 
@@ -95,15 +93,16 @@ class _WishlistPageState extends State<WishlistPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Wish list',
           style: TextStyle(
             fontFamily: 'LilitaOne',
             fontSize: 25,
-            color: const Color.fromARGB(255, 13, 11, 11),
+            color: Color.fromARGB(255, 13, 11, 11),
           ),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -115,63 +114,45 @@ class _WishlistPageState extends State<WishlistPage> {
                   ),
                 )
               : wishlistProducts.isNotEmpty
-                  // When there are wishlist products
                   ? ListView.builder(
                       padding: const EdgeInsets.all(16.0),
                       itemCount: wishlistProducts.length,
                       itemBuilder: (context, index) {
                         final product = wishlistProducts[index];
-                        return Dismissible(
-                          key: Key(product!.id),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) async {
+                        return WishlistCard(
+                          title: product!.name!,
+                          imageUrl: product.image,
+                          sizesData: {
+                            'Small': {
+                              'price': product.sizes!.small!.price!
+                                  .toDouble(), // Ensure conversion to double
+                              'calories':
+                                  product.sizes!.small!.calories!.toDouble(),
+                            },
+                            'Medium': {
+                              'price': product.sizes!.medium!.price!.toDouble(),
+                              'calories':
+                                  product.sizes!.medium!.calories!.toDouble(),
+                            },
+                            'Large': {
+                              'price': product.sizes!.large!.price!.toDouble(),
+                              'calories':
+                                  product.sizes!.large!.calories!.toDouble(),
+                            },
+                          },
+                          onRemove: () async {
                             await _wishlistController.removeProductFromWishlist(
                                 currentUserId, product.id);
-                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                    '${product.name} removed from wishlist'),
-                              ),
+                                  content: Text(
+                                      '${product.name} removed from wishlist')),
                             );
-                            _loadWishlist(); // Reload the wishlist after removal
+                            _loadWishlist();
                           },
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                Icon(Icons.delete,
-                                    color: Color.fromARGB(255, 125, 33, 33),
-                                    size: 30.0),
-                                SizedBox(width: 10.0),
-                                Text(
-                                  'Remove',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 125, 33, 33),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          child: WishlistCard(
-                            title: product.name!,
-                            description: product.reference!,
-                            price: product.sizes!.small!.price,
-                            imageUrl: product.image,
-                          ),
                         );
                       },
                     )
-                  // When the wishlist is empty
                   : Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -194,75 +175,109 @@ class _WishlistPageState extends State<WishlistPage> {
   }
 }
 
-class WishlistCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final double price;
-  final String imageUrl;
+// class WishlistCard extends StatelessWidget {
+//   final String title;
+//   final String description;
+//   final double price;
+//   final String imageUrl;
 
-  const WishlistCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-  });
+//   const WishlistCard({
+//     super.key,
+//     required this.title,
+//     required this.description,
+//     required this.price,
+//     required this.imageUrl,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: const Color.fromARGB(203, 197, 255, 193),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 4.0,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.network(
-                imageUrl,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 16.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    price.toString(),
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+//       elevation: 4.0,
+//       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+//       color: Color.fromARGB(255, 211, 232,
+//           213), // Light green background for a fresh, healthy feel
+//       child: Padding(
+//         padding: const EdgeInsets.all(12.0),
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             // Image with Favorite Icon
+//             Stack(
+//               children: [
+//                 ClipRRect(
+//                   borderRadius: BorderRadius.circular(12.0),
+//                   child: Image.network(
+//                     imageUrl,
+//                     width: 130,
+//                     height: 100,
+//                     fit: BoxFit.cover,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             const SizedBox(width: 16.0),
+//             // Details Section
+//             Expanded(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     title,
+//                     style: const TextStyle(
+//                       fontSize: 18.0,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.black87,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 4.0),
+//                   Text(
+//                     description,
+//                     style: const TextStyle(
+//                       fontSize: 14.0,
+//                       color: Colors.black54,
+//                     ),
+//                     maxLines: 2,
+//                     overflow: TextOverflow.ellipsis,
+//                   ),
+//                   const SizedBox(height: 8.0),
+//                   Text(
+//                     '$price',
+//                     style: const TextStyle(
+//                       fontSize: 16.0,
+//                       fontWeight: FontWeight.bold,
+//                       color: Colors.black87,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Positioned(
+//               top: 8,
+//               right: 8,
+//               child: Container(
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   shape: BoxShape.circle,
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.black26,
+//                       blurRadius: 4.0,
+//                     ),
+//                   ],
+//                 ),
+//                 child: IconButton(
+//                   icon: const Icon(Icons.favorite_rounded,
+//                       color:
+//                           Color(0xFF66BB6A)), // A vibrant green for interaction
+//                   onPressed: () {},
+//                   iconSize: 20.0,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

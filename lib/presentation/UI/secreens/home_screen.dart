@@ -1,7 +1,7 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/category_product_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
-import 'package:fit_bowl_2/presentation/UI/secreens/saladepage.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
 
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const Saladepage(),
+                          builder: (context) => CartPage(),
                         ),
                       );
                     },

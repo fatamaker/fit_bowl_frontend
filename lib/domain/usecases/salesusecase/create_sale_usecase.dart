@@ -18,13 +18,26 @@ class CreateSaleParams {
   final String userId;
   final int quantity;
   final List<String> supplements;
-  final String size;
+  final double totalprice;
+  final double totalCalories;
 
   CreateSaleParams({
     required this.productId,
     required this.userId,
     required this.quantity,
     this.supplements = const [],
-    required this.size,
+    required this.totalprice,
+    required this.totalCalories,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': productId,
+      'userId': userId,
+      'quantity': quantity,
+      'supplements': supplements,
+      'totalprice': totalprice,
+      'totalCalories': totalCalories,
+    };
+  }
 }

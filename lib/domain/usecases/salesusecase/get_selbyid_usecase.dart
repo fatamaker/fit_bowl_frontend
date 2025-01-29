@@ -8,7 +8,7 @@ class GetSaleByIdUseCase {
 
   const GetSaleByIdUseCase(this._repository);
 
-  Future<Either<Failure, Sale>> call(String saleId) {
+  Future<Either<Failure, Sale>> call({required String saleId}) {
     return _repository.getSaleById(saleId);
   }
 }

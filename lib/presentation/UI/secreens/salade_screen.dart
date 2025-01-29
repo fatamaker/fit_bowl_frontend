@@ -1,5 +1,6 @@
-// import 'package:fit_bowl_2/data/modeles/supplement_model.dart';
-// import 'package:fit_bowl_2/presentation/UI/widgets/buildAddOnOption.dart';
+// import 'package:fit_bowl_2/domain/usecases/salesusecase/create_sale_usecase.dart';
+// import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+// import 'package:fit_bowl_2/presentation/controllers/sale_controller.dart';
 // import 'package:fit_bowl_2/presentation/controllers/supplement_contoller.dart';
 // import 'package:flutter/material.dart';
 // import 'package:fit_bowl_2/domain/entities/product.dart';
@@ -17,9 +18,12 @@
 // class _SaladeScreenState extends State<SaladeScreen> {
 //   late SizeInfo selectedSize;
 //   final List<bool> selectedAddOns = [false, false, false];
-//   final Set<String> selectedSupplements = {};
-//   SupplementModel? selectedSupplement; // Define selected supplement
+//   final Set<String> selectedSupplements = {}; // Track selected supplements
 //   int selectedQuantity = 1;
+//   late final SupplementController _supplementController;
+//   late final SalesController _salesController;
+//   late final AuthenticationController _authenticationController;
+//   String? currentUserId; // Make sure this is initialized
 
 //   @override
 //   void initState() {
@@ -27,13 +31,32 @@
 //     selectedSize =
 //         widget.product.sizes?.small ?? SizeInfo(price: 0, calories: 0);
 
-//     Get.put(SupplementController());
+//     _supplementController = Get.put(SupplementController());
+//     _salesController = Get.put(SalesController());
+//     _authenticationController = Get.find();
+
+//     // Ensure user authentication data is ready
+//     currentUserId = _authenticationController.currentUser.id;
+
+//     // Fetch supplements if any
+//     if (widget.product.suppId != null) {
+//       for (var supplement in widget.product.suppId!) {
+//         _supplementController.getSupplementById(supplement.id);
+//       }
+//     }
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     final product = widget.product;
-//     final Set<String> selectedSupplements = {};
+
+//     // Calculate the total price
+//     final totalAddOnPrice = _calculateAddOnPrice();
+//     final totalPrice = selectedSize.price * selectedQuantity + totalAddOnPrice;
+
+//     // Calculate total calories
+//     final totalCalories = _calculateTotalCalories();
+
 //     return Scaffold(
 //       appBar: AppBar(
 //         backgroundColor: const Color(0xFFF3F6ED),
@@ -102,12 +125,9 @@
 //                     Text(
 //                       product.description != null
 //                           ? product.description!
-//                               .split(
-//                                   '•') // Split the description into a list by commas
-//                               .map((item) =>
-//                                   '• ${item.trim()}') // Add a bullet to each item
-//                               .join(
-//                                   '\n') // Join items back with a newline character
+//                               .split('•')
+//                               .map((item) => '• ${item.trim()}')
+//                               .join('\n')
 //                           : "No ingredients available",
 //                       style: const TextStyle(height: 1.5),
 //                     ),
@@ -116,6 +136,8 @@
 //               ),
 //             ),
 //             const SizedBox(height: 24),
+
+//             // Sizes Section
 //             Center(
 //               child: const Text(
 //                 'Sizes:',
@@ -123,8 +145,6 @@
 //               ),
 //             ),
 //             const SizedBox(height: 8),
-
-//             // Size Options
 //             _buildSizeOptions(product.sizes),
 //             const SizedBox(height: 60),
 
@@ -138,24 +158,23 @@
 //             const SizedBox(height: 20),
 
 //             // Supplement options
-//             // ignore: avoid_print
-
 //             ...product.suppId?.map(
-//                   (supplement) => AddOnOption(
-//                     suppId: supplement.id, // Access `id` of SupplementModel
-//                     selectedSupplements: selectedSupplements,
-//                     name: supplement.name, // Access other details as needed
-//                     price: supplement.price,
-//                     calories: supplement.calories,
+//                   (supplement) => _buildAddOnOption(
+//                     product.suppId!.indexOf(supplement),
+//                     supplement.name,
+//                     supplement.price,
+//                     supplement.calories ?? 0,
 //                   ),
 //                 ) ??
 //                 [],
+
 //             const SizedBox(height: 30),
 
+//             // Quantity Section
 //             Row(
 //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //               children: [
-//                 Text(
+//                 const Text(
 //                   'Combien de bol :',
 //                   style: TextStyle(
 //                     fontSize: 18,
@@ -165,16 +184,17 @@
 //                 Row(
 //                   children: [
 //                     IconButton(
-//                       icon: Icon(Icons.remove_circle_outline),
+//                       icon: const Icon(Icons.remove_circle_outline),
 //                       onPressed: () {
 //                         setState(() {
 //                           if (selectedQuantity > 1) selectedQuantity--;
 //                         });
 //                       },
 //                     ),
-//                     Text('$selectedQuantity', style: TextStyle(fontSize: 18)),
+//                     Text('$selectedQuantity',
+//                         style: const TextStyle(fontSize: 18)),
 //                     IconButton(
-//                       icon: Icon(Icons.add_circle_outline),
+//                       icon: const Icon(Icons.add_circle_outline),
 //                       onPressed: () {
 //                         setState(() {
 //                           selectedQuantity++;
@@ -185,7 +205,7 @@
 //                 ),
 //               ],
 //             ),
-//             SizedBox(height: 100),
+//             const SizedBox(height: 50),
 
 //             // Add to Cart Button
 //             Center(
@@ -198,17 +218,44 @@
 //                       borderRadius: BorderRadius.circular(8)),
 //                 ),
 //                 onPressed: () {
-//                   final totalAddOnPrice = _calculateAddOnPrice();
-//                   final totalPrice = selectedSize.price + totalAddOnPrice;
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     SnackBar(
+//                   // Ensure currentUserId is not null before calling createSale
+//                   if (currentUserId != null) {
+//                     // Call the createSale function
+//                     final params = CreateSaleParams(
+//                       productId: product.id,
+//                       userId: currentUserId!, // Use currentUserId safely
+//                       quantity: selectedQuantity,
+//                       supplements: selectedSupplements.toList(),
+//                       totalprice: totalPrice,
+//                       totalCalories: totalCalories,
+//                     );
+
+//                     _salesController.createSale(params);
+
+//                     ScaffoldMessenger.of(context).showSnackBar(
+//                       SnackBar(
 //                         content:
-//                             Text('Added to cart for $totalPrice Dinar(s)!')),
-//                   );
+//                             Text('Added to cart for $totalPrice Dinar(s)!'),
+//                       ),
+//                     );
+//                   } else {
+//                     ScaffoldMessenger.of(context).showSnackBar(
+//                       const SnackBar(
+//                         content:
+//                             Text('Please log in to proceed with the purchase!'),
+//                       ),
+//                     );
+//                   }
 //                 },
-//                 child: const Text('Add to Cart'),
+//                 child: Text(
+//                     style: TextStyle(
+//                       fontSize: 15,
+//                       color: const Color.fromARGB(255, 246, 255, 246),
+//                     ),
+//                     'Add to Cart: $totalPrice D | $totalCalories cal'),
 //               ),
 //             ),
+//             const SizedBox(height: 20),
 //           ],
 //         ),
 //       ),
@@ -259,24 +306,80 @@
 //     );
 //   }
 
-//   int _calculateAddOnPrice() {
-//     // Add-on prices
-//     const addOnPrices = [2, 2, 3];
-//     int total = 0;
+//   // Add-on Options Section
+//   Widget _buildAddOnOption(
+//       int index, String title, double price, double calories) {
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           selectedAddOns[index] = !selectedAddOns[index];
+//           if (selectedAddOns[index]) {
+//             selectedSupplements.add(title);
+//           } else {
+//             selectedSupplements.remove(title);
+//           }
+//         });
+//       },
+//       child: Center(
+//         child: Padding(
+//           padding: const EdgeInsets.all(8.0),
+//           child: Container(
+//             padding: const EdgeInsets.all(8),
+//             decoration: BoxDecoration(
+//               color:
+//                   selectedAddOns[index] ? Colors.green.shade100 : Colors.white,
+//               border: Border.all(color: Colors.green),
+//               borderRadius: BorderRadius.circular(8),
+//             ),
+//             child: Column(
+//               children: [
+//                 Text(
+//                   title,
+//                   style: const TextStyle(fontWeight: FontWeight.bold),
+//                 ),
+//                 Text('Prix: $price D'),
+//                 Text('Calories: $calories'),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   double _calculateAddOnPrice() {
+//     double total = 0;
 //     for (int i = 0; i < selectedAddOns.length; i++) {
 //       if (selectedAddOns[i]) {
-//         total += addOnPrices[i];
+//         total += widget.product.suppId?[i].price ?? 0;
 //       }
 //     }
-//     return total;
+//     return total * selectedQuantity;
+//   }
+
+//   // Calculate total calories from selected size and supplements
+//   double _calculateTotalCalories() {
+//     double totalCalories = (selectedSize.calories ?? 0).toDouble();
+
+//     for (int i = 0; i < selectedAddOns.length; i++) {
+//       if (selectedAddOns[i]) {
+//         totalCalories += (widget.product.suppId?[i].calories ?? 0).toDouble();
+//       }
+//     }
+
+//     return totalCalories * selectedQuantity;
 //   }
 // }
 
-import 'package:fit_bowl_2/data/modeles/supplement_model.dart';
+import 'package:fit_bowl_2/domain/usecases/salesusecase/create_sale_usecase.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
+import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+import 'package:fit_bowl_2/presentation/controllers/sale_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/supplement_contoller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_bowl_2/domain/entities/product.dart';
 import 'package:get/get.dart';
+import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart'; // Import your cart controller
 
 class SaladeScreen extends StatefulWidget {
   final Product product;
@@ -291,9 +394,12 @@ class _SaladeScreenState extends State<SaladeScreen> {
   late SizeInfo selectedSize;
   final List<bool> selectedAddOns = [false, false, false];
   final Set<String> selectedSupplements = {}; // Track selected supplements
-  SupplementModel? selectedSupplement; // Define selected supplement
   int selectedQuantity = 1;
-  late final SupplementController _controller;
+  late final SupplementController _supplementController;
+  late final SalesController _salesController;
+  late final AuthenticationController _authenticationController;
+  late final CartController _cartController;
+  String? currentUserId; // Make sure this is initialized
 
   @override
   void initState() {
@@ -301,12 +407,18 @@ class _SaladeScreenState extends State<SaladeScreen> {
     selectedSize =
         widget.product.sizes?.small ?? SizeInfo(price: 0, calories: 0);
 
-    Get.put(SupplementController());
-    _controller = Get.find();
-    // Fetch all supplements by their ids from the suppId list
+    _supplementController = Get.put(SupplementController());
+    _salesController = Get.put(SalesController());
+    _authenticationController = Get.find();
+    _cartController = Get.put(CartController()); // Initialize CartController
+
+    // Ensure user authentication data is ready
+    currentUserId = _authenticationController.currentUser.id;
+
+    // Fetch supplements if any
     if (widget.product.suppId != null) {
       for (var supplement in widget.product.suppId!) {
-        _controller.getSupplementById(supplement.id); // Fetch supplement by id
+        _supplementController.getSupplementById(supplement.id);
       }
     }
   }
@@ -314,6 +426,14 @@ class _SaladeScreenState extends State<SaladeScreen> {
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
+
+    // Calculate the total price
+    final totalAddOnPrice = _calculateAddOnPrice();
+    final totalPrice = selectedSize.price * selectedQuantity + totalAddOnPrice;
+
+    // Calculate total calories
+    final totalCalories = _calculateTotalCalories();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF3F6ED),
@@ -431,7 +551,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Combien de bol :',
                   style: TextStyle(
                     fontSize: 18,
@@ -441,16 +561,17 @@ class _SaladeScreenState extends State<SaladeScreen> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.remove_circle_outline),
+                      icon: const Icon(Icons.remove_circle_outline),
                       onPressed: () {
                         setState(() {
                           if (selectedQuantity > 1) selectedQuantity--;
                         });
                       },
                     ),
-                    Text('$selectedQuantity', style: TextStyle(fontSize: 18)),
+                    Text('$selectedQuantity',
+                        style: const TextStyle(fontSize: 18)),
                     IconButton(
-                      icon: Icon(Icons.add_circle_outline),
+                      icon: const Icon(Icons.add_circle_outline),
                       onPressed: () {
                         setState(() {
                           selectedQuantity++;
@@ -461,7 +582,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 100),
+            const SizedBox(height: 50),
 
             // Add to Cart Button
             Center(
@@ -473,18 +594,68 @@ class _SaladeScreenState extends State<SaladeScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
-                onPressed: () {
-                  final totalAddOnPrice = _calculateAddOnPrice();
-                  final totalPrice = selectedSize.price + totalAddOnPrice;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content:
-                            Text('Added to cart for $totalPrice Dinar(s)!')),
+                onPressed: () async {
+                  // Ensure currentUserId is not null before calling createSale
+                  if (currentUserId != null) {
+                    try {
+                      final params = CreateSaleParams(
+                        productId: widget.product.id, // Use the product ID
+                        userId: currentUserId!, // Use the current user ID
+                        quantity: selectedQuantity, // The selected quantity
+                        supplements: selectedSupplements
+                            .toList(), // List of selected supplements
+                        totalprice: totalPrice, // Total price of the sale
+                        totalCalories:
+                            totalCalories, // Total calories of the sale
+                      );
+
+                      // Create the sale (without expecting a result)
+                      final sale = await _salesController.createSale(params);
+
+                      print(sale!.id);
+                      final addToCartResult = await _cartController
+                          .addSaleToCart(currentUserId!, sale.id);
+
+                      // Provide feedback to the user
+                      if (addToCartResult) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Added to cart for $totalPrice Dinar(s)!')),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Failed to add to cart')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Failed to create sale')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Please log in to proceed with the purchase!')),
+                    );
+                  }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CartPage(),
+                    ),
                   );
                 },
-                child: const Text('Add to Cart'),
+                child: Text(
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: const Color.fromARGB(255, 246, 255, 246),
+                    ),
+                    'Add to Cart: $totalPrice D | $totalCalories cal'),
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -542,56 +713,60 @@ class _SaladeScreenState extends State<SaladeScreen> {
       onTap: () {
         setState(() {
           selectedAddOns[index] = !selectedAddOns[index];
+          if (selectedAddOns[index]) {
+            selectedSupplements.add(title);
+          } else {
+            selectedSupplements.remove(title);
+          }
         });
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: selectedAddOns[index] ? Colors.green.shade100 : Colors.white,
-            border: Border.all(color: Colors.green),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('+${price}D'),
-                    // ignore: unnecessary_brace_in_string_interps
-                    Text('${calories} cal'),
-                  ],
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color:
+                  selectedAddOns[index] ? Colors.green.shade100 : Colors.white,
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-              Icon(
-                selectedAddOns[index]
-                    ? Icons.check_box
-                    : Icons.check_box_outline_blank,
-                color: selectedAddOns[index] ? Colors.green : null,
-              ),
-            ],
+                Text('Prix: $price D'),
+                Text('Calories: $calories'),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  int _calculateAddOnPrice() {
-    // Add-on prices
-    const addOnPrices = [2, 2, 3];
-    int total = 0;
+  double _calculateAddOnPrice() {
+    double total = 0;
     for (int i = 0; i < selectedAddOns.length; i++) {
       if (selectedAddOns[i]) {
-        total += addOnPrices[i];
+        total += widget.product.suppId?[i].price ?? 0;
       }
     }
-    return total;
+    return total * selectedQuantity;
+  }
+
+  // Calculate total calories from selected size and supplements
+  double _calculateTotalCalories() {
+    double totalCalories = (selectedSize.calories ?? 0).toDouble();
+
+    for (int i = 0; i < selectedAddOns.length; i++) {
+      if (selectedAddOns[i]) {
+        totalCalories += (widget.product.suppId?[i].calories ?? 0).toDouble();
+      }
+    }
+
+    return totalCalories * selectedQuantity;
   }
 }

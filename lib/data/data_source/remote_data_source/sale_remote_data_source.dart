@@ -22,12 +22,14 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
   Future<SaleModel> createSale(CreateSaleParams saleData) async {
     try {
       final uri = Uri.parse(APIConst.createSale);
+      print(uri);
       final response = await http.post(
         uri,
-        body: json.encode(saleData),
+        body: json.encode(saleData.toJson()),
         headers: {'Content-Type': 'application/json'},
       );
 
+      print(response);
       if (response.statusCode == 201) {
         final body = json.decode(response.body);
         return SaleModel.fromJson(body);
@@ -64,7 +66,14 @@ class SaleRemoteDataSourceImpl implements SaleRemoteDataSource {
 
       if (response.statusCode == 200) {
         final body = json.decode(response.body);
-        return SaleModel.fromJson(body);
+        print('Decoded response body: $body');
+
+        // Parse the SaleModel and log its fields
+        final sale = SaleModel.fromJson(body);
+        print(
+            'Parsed SaleModel: id = ${sale.id}, productId = ${sale.productId}, userId = ${sale.userId}');
+
+        return sale;
       } else if (response.statusCode == 404) {
         throw SaleNotFoundException();
       } else {

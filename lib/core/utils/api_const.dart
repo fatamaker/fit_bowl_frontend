@@ -22,6 +22,7 @@ class APIConst {
   static const removesaleCart = '$baseUrl/cart/remove';
   static const addsaleCart = '$baseUrl/cart/add';
   static const clearCart = '$baseUrl/cart/clear/:userId';
+  static const createCart = '$baseUrl/cart/create';
 
   //sale
   static const createSale = '$baseUrl/sales/create';
