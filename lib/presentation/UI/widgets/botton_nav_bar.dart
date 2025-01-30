@@ -17,19 +17,21 @@ class BottomNavBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
+          height: 143,
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: DotNavigationBar(
+            backgroundColor: const Color(0xFFADEBB3),
             margin: const EdgeInsets.all(8),
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutQuint,
-            marginR: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-            paddingR: const EdgeInsets.only(bottom: 5, top: 10),
+            marginR: const EdgeInsets.symmetric(vertical: 0),
+            itemPadding:
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             borderRadius: 30,
             enableFloatingNavBar: true,
             enablePaddingAnimation: true,
             currentIndex: currentIndex,
             onTap: onTabChange,
-            dotIndicatorColor: Colors.black,
             items: [
               /// Home
               DotNavigationBarItem(

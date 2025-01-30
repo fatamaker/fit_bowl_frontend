@@ -6,9 +6,6 @@ import 'package:get/get.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
 import 'package:fit_bowl_2/domain/entities/product.dart'; // Ensure correct import for Product entity
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
 
@@ -124,18 +121,18 @@ class _WishlistPageState extends State<WishlistPage> {
                           imageUrl: product.image,
                           sizesData: {
                             'Small': {
-                              'price': product.sizes!.small!.price!
+                              'price': product.sizes!.small!.price
                                   .toDouble(), // Ensure conversion to double
                               'calories':
                                   product.sizes!.small!.calories!.toDouble(),
                             },
                             'Medium': {
-                              'price': product.sizes!.medium!.price!.toDouble(),
+                              'price': product.sizes!.medium!.price.toDouble(),
                               'calories':
                                   product.sizes!.medium!.calories!.toDouble(),
                             },
                             'Large': {
-                              'price': product.sizes!.large!.price!.toDouble(),
+                              'price': product.sizes!.large!.price.toDouble(),
                               'calories':
                                   product.sizes!.large!.calories!.toDouble(),
                             },

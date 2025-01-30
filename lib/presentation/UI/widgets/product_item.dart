@@ -2,7 +2,6 @@ import 'package:fit_bowl_2/domain/entities/product.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 // class ProductItem extends StatelessWidget {
@@ -283,9 +282,6 @@ import 'package:get/get.dart';
 //   }
 // }
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 class ProductItem extends StatefulWidget {
   final Product product;
 
@@ -423,12 +419,19 @@ class _ProductItemState extends State<ProductItem> {
                             return;
                           }
 
-                          // Toggle wishlist status
-                          final success =
-                              await wishlistController.updateWishlist(
-                            wishlistId,
-                            [widget.product.id],
-                          );
+                          bool success;
+                          if (isInWishlist) {
+                            success = await wishlistController
+                                .removeProductFromWishlist(
+                              currentUserId!,
+                              widget.product.id,
+                            );
+                          } else {
+                            success = await wishlistController.updateWishlist(
+                              wishlistId,
+                              [widget.product.id],
+                            );
+                          }
 
                           if (success) {
                             setState(() {
