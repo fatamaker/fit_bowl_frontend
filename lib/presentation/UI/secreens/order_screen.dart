@@ -239,9 +239,11 @@
 //   }
 // }
 
+import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order-status.dart';
 import 'package:fit_bowl_2/domain/entities/product.dart';
 import 'package:fit_bowl_2/domain/entities/sale.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/shop_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
@@ -323,18 +325,15 @@ class _OrderScreenState extends State<OrderScreen> {
 
     try {
       setState(() => isLoading = true);
-      final order = await _orderController.placeOrder(currentUserId);
+      final order = await _orderController.placeOrder(
+          currentUserId, addressController.text, selectedPaymentMethod);
       setState(() => isLoading = false);
-      if (order != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("✅ Order Placed Successfully!")),
-        );
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => OrderStatusScreen(),
-        ));
-      } else {
-        throw Exception("Order creation failed");
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("✅ Order Placed Successfully!")),
+      );
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => OrderStatusScreen(),
+      ));
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -409,14 +408,49 @@ class _OrderScreenState extends State<OrderScreen> {
                             backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          onPressed: _placeOrder,
-                          child: const Text("Confirm Order",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Confirm Order"),
+                                content: const Text(
+                                    "Are you sure you want to place this order?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => HomeScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                      _placeOrder(); // Call the place order function
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Confirm Order",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 30),

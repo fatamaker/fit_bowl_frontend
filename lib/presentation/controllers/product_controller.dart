@@ -241,6 +241,4 @@ class ProductController extends GetxController {
 
     update();
   }
-
-  // Getter for the selected product
 }

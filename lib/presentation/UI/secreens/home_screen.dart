@@ -1,3 +1,4 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/category_product_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order_screen.dart';
@@ -161,30 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const OrderHistoryPage(
-                            orderHistoryItems: [
-                              {
-                                'orderId': 1,
-                                'product': 'Item 1',
-                                'quantity': 2,
-                                'totalPrice': 29.99,
-                                'date': '2025-01-20',
-                              },
-                              {
-                                'orderId': 2,
-                                'product': 'Item 2',
-                                'quantity': 1,
-                                'totalPrice': 15.50,
-                                'date': '2025-01-18',
-                              },
-                            ],
-                          ),
+                          builder: (context) => const OrderHistoryPage(),
                         ),
                       );
                     },
                     child: ListTile(
                       leading: Icon(
-                        Icons.shopping_cart_rounded,
+                        Icons.format_list_numbered_sharp,
                         color: Color.fromARGB(255, 61, 60, 60),
                       ),
                       title: Text(
@@ -239,6 +223,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       title: Text(
                         'categorys',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CartPage(),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.shopping_cart_checkout_rounded,
+                        color: Color.fromARGB(255, 61, 60, 60),
+                      ),
+                      title: Text(
+                        'cart',
                         style:
                             TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
                       ),

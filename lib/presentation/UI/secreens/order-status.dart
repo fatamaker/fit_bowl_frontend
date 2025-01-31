@@ -1,3 +1,4 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class OrderStatusScreen extends StatefulWidget {
@@ -22,7 +23,16 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
         ),
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),

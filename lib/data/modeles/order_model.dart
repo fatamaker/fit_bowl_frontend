@@ -1,3 +1,5 @@
+import 'package:fit_bowl_2/data/modeles/sale_model.dart';
+
 import '../../domain/entities/order.dart';
 
 class OrderModel extends Order {
@@ -13,13 +15,16 @@ class OrderModel extends Order {
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-      id: json['_id'],
-      userId: json['userId'],
-      salesIds: List<String>.from(json['salesID']),
-      totalAmount: json['totalAmount'].toDouble(),
-      status: json['status'],
-      deliveryAddress: json['deliveryAdress'],
-      payment: json['payment'],
+      id: json['_id'] ?? '',
+      userId: json['userId'] ?? '',
+      salesIds: (json['salesID'] as List<dynamic>?)
+              ?.map((sale) => SaleModel.fromJson(sale))
+              .toList() ??
+          [],
+      totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+      status: json['status'] ?? 'pending',
+      payment: json['payment'] ?? 'Unknown',
+      deliveryAddress: json['deliveryAddress'] ?? 'No address provided',
     );
   }
 

@@ -8,7 +8,8 @@ class PlaceOrderUseCase {
 
   const PlaceOrderUseCase(this._repository);
 
-  Future<Either<Failure, Order>> call(String userId) {
-    return _repository.placeOrder(userId);
+  Future<Either<Failure, Order>> call(
+      String userId, String deliveryAddress, String payment) {
+    return _repository.placeOrder(userId, deliveryAddress, payment);
   }
 }

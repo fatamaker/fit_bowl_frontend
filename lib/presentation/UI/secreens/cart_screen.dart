@@ -1,6 +1,7 @@
 import 'package:fit_bowl_2/domain/entities/product.dart';
 import 'package:fit_bowl_2/domain/entities/sale.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/order_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
 import 'package:flutter/material.dart';
@@ -168,7 +169,12 @@ class _CartPageState extends State<CartPage> {
                                                 TextButton(
                                                   onPressed: () =>
                                                       Navigator.of(context)
-                                                          .pop(),
+                                                          .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderScreen(),
+                                                    ),
+                                                  ),
                                                   child: const Text('OK'),
                                                 ),
                                               ],

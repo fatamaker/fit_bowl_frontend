@@ -11,9 +11,11 @@ class OrderRepositoryImpl implements OrderRepository {
   OrderRepositoryImpl({required this.orderRemoteDataSource});
 
   @override
-  Future<Either<Failure, Order>> placeOrder(String userId) async {
+  Future<Either<Failure, Order>> placeOrder(
+      String userId, String deliveryAddress, String payment) async {
     try {
-      final order = await orderRemoteDataSource.placeOrder(userId);
+      final order = await orderRemoteDataSource.placeOrder(
+          userId, deliveryAddress, payment);
       return Right(order);
     } on BadRequestException catch (e) {
       return Left(BadRequestFailure(message: e.message));

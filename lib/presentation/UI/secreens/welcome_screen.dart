@@ -35,7 +35,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     bool res = true;
 
     Get.put(WishlistController());
+    final WishlistController wishListController = Get.find();
     Get.put(CartController());
+    final CartController cartController = Get.find();
     Get.put(OrderController());
 
     Get.put(AuthenticationController());
@@ -54,9 +56,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           res = false;
         }, (r) async {
           authController.currentUser = r;
-          // await wishListController
-          //     .getUserWishlist(authController.currentUser.id!);
-          // await cartController.getUserCart(authController.currentUser.id!);
+          await wishListController
+              .getWishlistByUserId(authController.currentUser.id!);
+          await cartController.getCartByUserId(authController.currentUser.id!);
           // Get.put(NotificationsController());
         });
         print(authController.currentUser.birthDate);

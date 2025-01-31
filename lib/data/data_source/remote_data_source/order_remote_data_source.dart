@@ -6,7 +6,8 @@ import 'package:fit_bowl_2/data/modeles/order_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class OrderRemoteDataSource {
-  Future<OrderModel> placeOrder(String userId);
+  Future<OrderModel> placeOrder(
+      String userId, String deliveryAddress, String payment);
   Future<List<OrderModel>> getUserOrders(String userId);
   Future<OrderModel> updateOrderStatus(String orderId, String status);
   Future<OrderModel> getOrderById(String orderId);
@@ -16,17 +17,26 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   OrderRemoteDataSourceImpl();
 
   @override
-  Future<OrderModel> placeOrder(String userId) async {
+  Future<OrderModel> placeOrder(
+      String userId, String deliveryAddress, String payment) async {
     try {
       final uri = Uri.parse(APIConst.placeOrder);
       final response = await http.post(
         uri,
-        body: json.encode({'userId': userId}),
+        body: json.encode({
+          'userId': userId,
+          'deliveryAddress': deliveryAddress,
+          'payment': payment
+        }),
         headers: {'Content-Type': 'application/json'},
       );
 
+      print("Response Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
       if (response.statusCode == 201) {
-        final body = json.decode(response.body);
+        final Map<String, dynamic> body = json.decode(response.body);
+        print("Decoded Body: $body");
         return OrderModel.fromJson(body);
       } else if (response.statusCode == 400) {
         throw BadRequestException(message: 'Cart is empty or not found');
@@ -34,6 +44,7 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
         throw ServerException();
       }
     } catch (e) {
+      print("Error placing order: $e");
       throw ServerException(message: e.toString());
     }
   }

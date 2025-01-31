@@ -16,6 +16,7 @@ abstract class WishlistRemoteDataSource {
 
 class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   WishlistRemoteDataSourceImpl();
+
   @override
   Future<void> createWishList({required String userId}) async {
     try {
@@ -29,7 +30,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
         },
         body: body,
       );
-      if (res.statusCode != 200) {
+      if (res.statusCode != 201) {
         throw ServerException(message: "Failed to create wishlist");
       }
     } catch (e) {

@@ -13,11 +13,12 @@ class OrderController extends GetxController {
   bool isLoading = false;
   String errorMessage = '';
 
-  Future<bool> placeOrder(String userId) async {
+  Future<bool> placeOrder(
+      String userId, String deliveryAddress, String payment) async {
     isLoading = true;
     update();
 
-    final res = await PlaceOrderUseCase(sl())(userId);
+    final res = await PlaceOrderUseCase(sl())(userId, deliveryAddress, payment);
     isLoading = false;
 
     return res.fold(

@@ -4,6 +4,7 @@ import 'package:fit_bowl_2/presentation/UI/widgets/product_item.dart';
 import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/category_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
+import 'package:badges/badges.dart' as badges;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -277,9 +278,8 @@ class _ShopScreenState extends State<ShopScreen> {
             ],
           ),
 
-          // Floating Action Button positioned above bottom
           Positioned(
-            bottom: 100, // Adjust this value to position it higher or lower
+            bottom: 110,
             right: 20, // Keep it aligned to the right
             child: GetBuilder<CartController>(
               builder: (cartController) {
@@ -287,16 +287,35 @@ class _ShopScreenState extends State<ShopScreen> {
                   scale: cartController.cartSales.isNotEmpty ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 300),
                   child: cartController.cartSales.isNotEmpty
-                      ? FloatingActionButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => CartPage(),
-                              ),
-                            );
-                          },
-                          backgroundColor: Colors.green,
-                          child: const Icon(Icons.shopping_cart),
+                      ? badges.Badge(
+                          position:
+                              badges.BadgePosition.topEnd(top: -5, end: -5),
+                          showBadge: cartController.cartSales.isNotEmpty,
+                          badgeContent: Text(
+                            cartController.cartSales.length.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: Colors.red,
+                            padding: const EdgeInsets.all(6),
+                            borderRadius: BorderRadius.circular(8),
+                            elevation: 2,
+                          ),
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CartPage(),
+                                ),
+                              );
+                            },
+                            backgroundColor: Colors.green,
+                            child: const Icon(Icons.shopping_cart),
+                          ),
                         )
                       : const SizedBox(),
                 );

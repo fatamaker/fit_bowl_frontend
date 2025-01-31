@@ -38,9 +38,9 @@ abstract class AuthenticationRemoteDataSource {
     String id,
     String firstName,
     String lastName,
+    String address,
     String phone,
     String gender,
-    String address,
     DateTime birthDate,
   );
 

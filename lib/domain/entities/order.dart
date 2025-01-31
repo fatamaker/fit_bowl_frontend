@@ -1,7 +1,9 @@
+import 'package:fit_bowl_2/data/modeles/sale_model.dart';
+
 class Order {
   final String id;
   final String userId;
-  final List<String> salesIds;
+  final List<SaleModel> salesIds;
   final double totalAmount;
   final String status;
   final String deliveryAddress;
