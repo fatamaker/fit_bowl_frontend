@@ -241,4 +241,13 @@ class ProductController extends GetxController {
 
     update();
   }
+
+  void searchProducts(String word) {
+    List<Product> prd = allProducts;
+    filteredProducts = prd
+        .where((element) =>
+            (element.name!.toUpperCase().contains(word.toUpperCase())))
+        .toList();
+    update();
+  }
 }

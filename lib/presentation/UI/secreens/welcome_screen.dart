@@ -7,6 +7,7 @@ import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/order_controller.dart';
+import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/login_screen.dart';
@@ -39,6 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Get.put(CartController());
     final CartController cartController = Get.find();
     Get.put(OrderController());
+    Get.put(ProductController());
 
     Get.put(AuthenticationController());
     final AuthenticationController authController = Get.find();

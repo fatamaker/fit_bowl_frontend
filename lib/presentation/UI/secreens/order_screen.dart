@@ -243,7 +243,6 @@ import 'package:fit_bowl_2/presentation/UI/secreens/home_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order-status.dart';
 import 'package:fit_bowl_2/domain/entities/product.dart';
 import 'package:fit_bowl_2/domain/entities/sale.dart';
-import 'package:fit_bowl_2/presentation/UI/secreens/shop_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';

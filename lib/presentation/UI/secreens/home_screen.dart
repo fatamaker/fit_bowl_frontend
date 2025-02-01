@@ -6,6 +6,7 @@ import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
 
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fit_bowl_2/presentation/UI/secreens/shop_screen.dart';
@@ -25,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
   // ignore: prefer_final_fields
   TextEditingController _searchController = TextEditingController();
+
+  final ProductController productController = Get.find();
 
   // Define pages
   final List<Widget> _pages = [
@@ -76,6 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             hintText: "Search...",
                           ),
                           autofocus: true,
+                          onChanged: (value) {
+                            productController.searchProducts(value);
+                          },
                         ),
                       ),
                     ),
