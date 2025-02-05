@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:label="fit_bowl_2"
+        android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- <uses-library android:name="android.webkit.WebView"/> -->
+        
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

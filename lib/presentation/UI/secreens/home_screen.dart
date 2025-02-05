@@ -1,5 +1,5 @@
 import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
-import 'package:fit_bowl_2/presentation/UI/secreens/category_product_screen.dart';
+
 import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/order_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
@@ -24,8 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   bool _isSearching = false;
-  // ignore: prefer_final_fields
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   final ProductController productController = Get.find();
 
@@ -64,15 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           actions: [
-            // If _isSearching is true, show the TextField, else show the search icon
             _isSearching
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: SizedBox(
                       width: 230,
                       child: Padding(
-                        padding: const EdgeInsets.all(
-                            8.0), // Add padding inside the TextField
+                        padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -98,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-            // Close the search bar if it is open
             if (_isSearching)
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
@@ -108,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     setState(() {
                       _isSearching = false;
-                      _searchController.clear(); // Clear the search input
+                      _searchController.clear();
                     });
                   },
                 ),
@@ -120,11 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Color(0xFFD9D9D9),
         child: Column(
           children: [
-            // Logo and other pages
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
                 DrawerHeader(
                   padding: EdgeInsets.zero,
                   child: Container(
@@ -134,19 +128,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       final currentUser = controller.currentUser;
                       return Row(
                         children: [
-                          // Profile Picture
                           Padding(
                             padding: const EdgeInsets.all(25.0),
                             child: CircleAvatar(
                               radius: 40,
                               backgroundImage: NetworkImage(
                                 currentUser.imageUrl!,
-                              ), // Load profile image from URL
+                              ),
                             ),
                           ),
-
                           Text(
-                            '${currentUser.firstName}  ${currentUser.lastName}', // Combine first and last name
+                            '${currentUser.firstName}  ${currentUser.lastName}',
                             style: TextStyle(
                               fontFamily: 'LilitaOne',
                               fontSize: 23,
@@ -161,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 ),
-                // command history
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: GestureDetector(
@@ -185,7 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                // About page
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: GestureDetector(
@@ -209,33 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
-                // categorys
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CategoryProductScreen(),
-                        ),
-                      );
-                    },
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.category_outlined,
-                        color: Color.fromARGB(255, 61, 60, 60),
-                      ),
-                      title: Text(
-                        'categorys',
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 61, 60, 60)),
-                      ),
-                    ),
-                  ),
-                ),
-
                 Padding(
                   padding: const EdgeInsets.only(left: 25.0),
                   child: GestureDetector(
@@ -261,10 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-
             const Spacer(),
-
-            // Logout button
             Padding(
               padding: const EdgeInsets.only(left: 25.0, bottom: 25.0),
               child: ListTile(
