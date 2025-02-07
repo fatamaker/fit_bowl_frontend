@@ -49,6 +49,8 @@ dependencies:
   path: ^1.9.0
   badges: ^3.1.2
   model_viewer_plus: ^1.9.1
+  flutter_inappwebview: ^6.1.5
+  
  
  
 
@@ -79,6 +81,7 @@ flutter:
     - assetes/Boulangerie_Grissol_Croutons_Spring_Mix_Salad_Recipe-removebg-preview.png
     - assetes/téléchargement__6_-removebg.png
     - assetes/userImage.jpg
+    
    
 
   # To add assets to your application, add an assets section, like this:
