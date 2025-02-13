@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class BottomNavBar extends StatelessWidget {
   final void Function(int)? onTabChange;
   final int currentIndex;
 
-  // ignore: prefer_const_constructors_in_immutables
   BottomNavBar({
     super.key,
     required this.onTabChange,
@@ -16,41 +15,60 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Container(
-          height: 143,
-          padding: const EdgeInsets.symmetric(vertical: 30),
-          child: DotNavigationBar(
-            backgroundColor: const Color(0xFFADEBB3),
-            margin: const EdgeInsets.all(8),
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeOutQuint,
-            marginR: const EdgeInsets.symmetric(vertical: 0),
-            itemPadding:
-                const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            borderRadius: 30,
-            enableFloatingNavBar: true,
-            enablePaddingAnimation: true,
-            currentIndex: currentIndex,
-            onTap: onTabChange,
-            items: [
-              /// Home
-              DotNavigationBarItem(
-                icon: const Icon(Icons.home),
-                selectedColor: Colors.purple,
-              ),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              // Background color of the bottom bar
+              borderRadius: BorderRadius.circular(20), // Border radius
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1), // Shadow color
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: SalomonBottomBar(
+              currentIndex: currentIndex,
+              onTap: onTabChange,
+              items: [
+                /// Home
+                SalomonBottomBarItem(
+                  icon: const Icon(
+                    Icons.home,
+                    size: 26,
+                  ),
+                  title: const Text("Home"),
+                  selectedColor: const Color.fromARGB(255, 29, 173, 53),
+                  unselectedColor: Colors.grey,
+                ),
 
-              /// Likes
-              DotNavigationBarItem(
-                icon: const Icon(Icons.favorite),
-                selectedColor: Colors.pink,
-              ),
+                /// Likes
+                SalomonBottomBarItem(
+                  icon: const Icon(
+                    Icons.favorite,
+                    size: 26,
+                  ),
+                  title: const Text("Likes"),
+                  selectedColor: Colors.pink,
+                  unselectedColor: Colors.grey,
+                ),
 
-              /// Profile
-              DotNavigationBarItem(
-                icon: const Icon(Icons.person),
-                selectedColor: Colors.teal,
-              ),
-            ],
+                /// Profile
+                SalomonBottomBarItem(
+                  icon: const Icon(
+                    Icons.person,
+                    size: 26,
+                  ),
+                  title: const Text("Profile"),
+                  selectedColor: Colors.teal,
+                  unselectedColor: Colors.grey,
+                ),
+              ],
+            ),
           ),
         );
       },

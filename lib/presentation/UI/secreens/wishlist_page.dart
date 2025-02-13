@@ -4,7 +4,8 @@ import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_bowl_2/presentation/controllers/product_controller.dart';
-import 'package:fit_bowl_2/domain/entities/product.dart'; // Ensure correct import for Product entity
+import 'package:fit_bowl_2/domain/entities/product.dart';
+import 'package:lottie/lottie.dart'; // Ensure correct import for Product entity
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -154,9 +155,11 @@ class _WishlistPageState extends State<WishlistPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            'assetes/téléchargement__6_-removebg.png',
-                            height: 100,
+                          Lottie.asset(
+                            'assetes/animations/coeur.json',
+                            width: 150,
+                            height: 150,
+                            repeat: false,
                           ),
                           const SizedBox(height: 10),
                           const Text(

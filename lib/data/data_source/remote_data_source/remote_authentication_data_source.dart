@@ -84,7 +84,7 @@ class AuthenticationRemoteDataSourceImpl
           password: password);
       Map<String, dynamic> requestData = userModel.toJson();
       // Parse the URL
-      final url = Uri.parse("http://192.168.1.13:5000/api/register");
+      final url = Uri.parse(APIConst.register);
       print(requestData.toString());
       print("test");
       // Make the POST request
@@ -152,24 +152,53 @@ class AuthenticationRemoteDataSourceImpl
     }
   }
 
+  // @override
+  // Future<void> forgetPassword({
+  //   required String email,
+  //   required String destination,
+  // }) async {
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(APIConst.forgetPassword),
+  //       body: jsonEncode({"email": email, "destination": destination}),
+  //       headers: {"Content-Type": "application/json"},
+  //     );
+
+  //     if (response.statusCode == 404) {
+  //       throw DataNotFoundException("email not registred");
+  //     } else if (response.statusCode == 500) {
+  //       throw ServerException(message: "server error");
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
   @override
   Future<void> forgetPassword({
     required String email,
     required String destination,
   }) async {
     try {
+      final url = Uri.parse(APIConst.forgetPassword);
+      print("Sending request to: $url");
+
       final response = await http.post(
-        Uri.parse(APIConst.forgetPassword),
+        url,
         body: jsonEncode({"email": email, "destination": destination}),
         headers: {"Content-Type": "application/json"},
       );
 
+      print("Response Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
       if (response.statusCode == 404) {
-        throw DataNotFoundException("email not registred");
+        throw DataNotFoundException("Email not registered");
       } else if (response.statusCode == 500) {
-        throw ServerException(message: "server error");
+        throw ServerException(message: "Server error: ${response.body}");
       }
     } catch (e) {
+      print("Exception caught: $e");
       rethrow;
     }
   }

@@ -102,6 +102,57 @@ class AuthenticationController extends GetxController {
     update();
   }
 
+  // Future<String> createAccount(
+  //     {required TextEditingController email,
+  //     required TextEditingController firstName,
+  //     required TextEditingController adresse,
+  //     required TextEditingController lastName,
+  //     required TextEditingController password,
+  //     required TextEditingController cpassword,
+  //     required BuildContext context}) async {
+  //   final res = await CreateAccountUsecase(sl()).call(
+  //       email: email.text,
+  //       password: password.text,
+  //       adresse: adresse.text,
+  //       phone: '',
+  //       firstName: firstName.text,
+  //       lastName: lastName.text,
+  //       imageUrl: '',
+  //       birthDate: DateTime.parse("2020-07-17T03:18:31.177769-04:00"),
+  //       gender: '');
+  //   String userid = "";
+  //   String message = '';
+  //   res.fold((l) => message = l.message!, (r) async {
+  //     print("Response from create account: $r");
+
+  //     await CreateCartUseCase(sl())(userId: r);
+  //     await CreateWishListUseCase(sl())(userId: r);
+
+  //     email.clear();
+  //     password.clear();
+  //     firstName.clear();
+  //     lastName.clear();
+  //     cpassword.clear();
+
+  //     adresse.clear();
+  //     gender = null;
+  //     birthDate = null;
+  //     termsAccepted = false;
+  //     update();
+  //   });
+  //   Fluttertoast.showToast(
+  //       msg: message,
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       timeInSecForIosWeb: 1,
+  //       backgroundColor: Colors.black,
+  //       textColor: Colors.white,
+  //       fontSize: 16.0);
+
+  //   update();
+  //   return userid;
+  // }
+
   Future<String> createAccount(
       {required TextEditingController email,
       required TextEditingController firstName,
@@ -120,34 +171,56 @@ class AuthenticationController extends GetxController {
         imageUrl: '',
         birthDate: DateTime.parse("2020-07-17T03:18:31.177769-04:00"),
         gender: '');
+
     String userid = "";
     String message = '';
-    res.fold((l) => message = l.message!, (r) async {
+
+    res.fold((l) {
+      message = l.message!;
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }, (r) async {
       print("Response from create account: $r");
 
       await CreateCartUseCase(sl())(userId: r);
       await CreateWishListUseCase(sl())(userId: r);
 
+      // Clear input fields
       email.clear();
       password.clear();
       firstName.clear();
       lastName.clear();
       cpassword.clear();
-
       adresse.clear();
+
+      // Reset other values if needed
       gender = null;
       birthDate = null;
       termsAccepted = false;
+
       update();
-    });
-    Fluttertoast.showToast(
-        msg: message,
+
+      // Show success toast
+      Fluttertoast.showToast(
+        msg: "Registration successful! Redirecting to login...",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF1B6A3D),
         textColor: Colors.white,
-        fontSize: 16.0);
+        fontSize: 16.0,
+      );
+
+      // Navigate to login screen
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const LoginScreen()));
+    });
+
     update();
     return userid;
   }

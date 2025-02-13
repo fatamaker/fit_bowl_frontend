@@ -195,7 +195,8 @@ class _SaladeScreenState extends State<SaladeScreen> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ModelViewerScreen(),
+                      builder: (context) =>
+                          ModelViewerScreen(modelUrl: product.model3d),
                     ),
                   );
                 },

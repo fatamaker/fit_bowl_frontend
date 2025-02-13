@@ -1,7 +1,8 @@
 import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/confirmation_screen.dart';
 
 import 'package:fit_bowl_2/presentation/UI/secreens/order_history_page.dart';
-import 'package:fit_bowl_2/presentation/UI/secreens/order_screen.dart';
+
 import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/wishlist_page.dart';
 
@@ -131,17 +132,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Padding(
                             padding: const EdgeInsets.all(25.0),
                             child: CircleAvatar(
+                              backgroundImage:
+                                  (controller.currentUser.imageUrl?.isEmpty ??
+                                          true)
+                                      ? const AssetImage(
+                                          "assetes/salde-removebg.png")
+                                      : NetworkImage(
+                                              controller.currentUser.imageUrl!)
+                                          as ImageProvider,
                               radius: 40,
-                              backgroundImage: NetworkImage(
-                                currentUser.imageUrl!,
-                              ),
                             ),
                           ),
                           Text(
                             '${currentUser.firstName}  ${currentUser.lastName}',
                             style: TextStyle(
                               fontFamily: 'LilitaOne',
-                              fontSize: 23,
+                              fontSize: 18,
                               color: const Color.fromARGB(255, 13, 11, 11),
                             ),
                           ),
@@ -182,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OrderScreen(),
+                          builder: (context) => ConfirmationScreen(),
                         ),
                       );
                     },

@@ -90,7 +90,7 @@ class OtpScreen extends StatelessWidget {
                           }
                         },
                         decoration: InputDecoration(
-                          hintText: "0",
+                          //hintText: "0",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),

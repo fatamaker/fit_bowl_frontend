@@ -279,7 +279,8 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
 
           Positioned(
-            bottom: 110,
+            // bottom: 110,
+            bottom: 8,
             right: 20, // Keep it aligned to the right
             child: GetBuilder<CartController>(
               builder: (cartController) {

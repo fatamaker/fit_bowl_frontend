@@ -50,6 +50,9 @@ dependencies:
   badges: ^3.1.2
   model_viewer_plus: ^1.9.1
   flutter_inappwebview: ^6.1.5
+  lottie: ^3.3.1
+  salomon_bottom_bar: ^3.3.2
+ 
   
  
  
@@ -81,6 +84,9 @@ flutter:
     - assetes/Boulangerie_Grissol_Croutons_Spring_Mix_Salad_Recipe-removebg-preview.png
     - assetes/téléchargement__6_-removebg.png
     - assetes/userImage.jpg
+    - assetes/animations/success.json
+    - assetes/animations/coeur.json
+    - assetes/animations/cart.json
     
    
 
