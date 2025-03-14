@@ -1,5 +1,5 @@
 class APIConst {
-  static const baseUrl = 'http://192.168.247.24:5000/api';
+  static const baseUrl = 'https://mongrel-infinite-stallion.ngrok-free.app/api';
 
   //product
   static const allProducts = '$baseUrl/products';
