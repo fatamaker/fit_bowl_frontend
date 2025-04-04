@@ -405,7 +405,11 @@ class AuthenticationController extends GetxController {
 
   Future<void> updateImage(BuildContext context) async {
     try {
-      if (f == null) {
+      if (userImage == '' && f == null) {
+        await ClearUserImageUsecase(sl())(currentUser.id!);
+      } else if (f != null) {
+        await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
+      } else {
         Fluttertoast.showToast(
           msg: "No image selected",
           toastLength: Toast.LENGTH_SHORT,
@@ -418,21 +422,17 @@ class AuthenticationController extends GetxController {
         return;
       }
 
-      if (userImage == '') {
-        await ClearUserImageUsecase(sl())(currentUser.id!);
-      } else {
-        await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
-      }
-
-      await getCurrentUser(currentUser.id!).then((value) =>
-          Fluttertoast.showToast(
-              msg: "Profile picture updated",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0));
+      // ✅ Refresh user data after update/clear
+      await getCurrentUser(currentUser.id!)
+          .then((value) => Fluttertoast.showToast(
+                msg: "Profile picture updated",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              ));
     } catch (e) {
       print('Error updating image: $e');
       Fluttertoast.showToast(

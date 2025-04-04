@@ -90,6 +90,9 @@ class _OrderScreenState extends State<OrderScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("✅ Order Placed Successfully!")),
       );
+
+      _cartController.resetCart();
+
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ConfirmationScreen(),
       ));
@@ -239,7 +242,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold)),
             ),
-            Text("\$${(price * quantity).toStringAsFixed(2)}",
+            Text("${(price * quantity).toStringAsFixed(2)}\D",
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ],
@@ -287,12 +290,12 @@ class _OrderScreenState extends State<OrderScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Subtotal: \$${subtotal.toStringAsFixed(2)}",
+        Text("Subtotal: ${subtotal.toStringAsFixed(2)}\D",
             style: const TextStyle(fontSize: 16)),
-        Text("Delivery Fee: \$${deliveryFee.toStringAsFixed(2)}",
+        Text("Delivery Fee: ${deliveryFee.toStringAsFixed(2)}\D",
             style: const TextStyle(fontSize: 16)),
         const Divider(),
-        Text("Total: \$${total.toStringAsFixed(2)}",
+        Text("Total: ${total.toStringAsFixed(2)}\D",
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ],
     );

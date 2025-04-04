@@ -59,7 +59,7 @@ class WishlistCard extends StatelessWidget {
                   child: Image.network(
                     imageUrl,
                     width: 120,
-                    height: 100,
+                    // height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -197,7 +197,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             color: Colors.amber, size: 18),
                         const SizedBox(width: 4),
                         Text(
-                          '\$${entry.value['price']!.toStringAsFixed(2)}',
+                          '${entry.value['price']!.toStringAsFixed(2)}\D',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),

@@ -147,6 +147,7 @@ class CartController extends GetxController {
   void resetCart() {
     userCart = null;
     errorMessage = '';
+    cartSales = [];
     update();
   }
 }

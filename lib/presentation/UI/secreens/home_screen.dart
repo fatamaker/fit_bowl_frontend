@@ -1,3 +1,4 @@
+import 'package:fit_bowl_2/presentation/UI/secreens/about_us_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/cart_screen.dart';
 import 'package:fit_bowl_2/presentation/UI/secreens/confirmation_screen.dart';
 
@@ -188,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ConfirmationScreen(),
+                          builder: (context) => AboutUsScreen(),
                         ),
                       );
                     },

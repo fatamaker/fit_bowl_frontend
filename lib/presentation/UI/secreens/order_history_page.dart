@@ -125,7 +125,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                   ),
                                   const SizedBox(height: 4.0),
                                   Text(
-                                    'Price: \$${sale.totalPrice.toStringAsFixed(2)}',
+                                    'Price: ${sale.totalPrice.toStringAsFixed(2)}\D',
                                     style: TextStyle(
                                         fontSize: 14.0,
                                         color: Colors.grey[700]),
@@ -153,7 +153,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'Total: \$${order.totalAmount.toStringAsFixed(2)}',
+                'Total: ${order.totalAmount.toStringAsFixed(2)}\D',
                 style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -265,7 +265,7 @@ class OrderHistoryCard extends StatelessWidget {
 
                   // Displaying Total Price
                   Text(
-                    'Total: \$${totalPrice.toStringAsFixed(2)}',
+                    'Total: ${totalPrice.toStringAsFixed(2)}\D',
                     style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,

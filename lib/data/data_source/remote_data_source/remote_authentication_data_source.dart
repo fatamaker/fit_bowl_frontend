@@ -288,17 +288,26 @@ class AuthenticationRemoteDataSourceImpl
   @override
   Future<void> clearUserImage(String userId) async {
     try {
-      Map<String, dynamic> model = {'id': userId, 'image': ''};
-      await http.put(
-        Uri.parse('${APIConst.updateProfile}/$userId'),
-        body: model,
+      final url = Uri.parse(APIConst.updateUserImage);
+
+      // This sends a normal POST request with required fields
+      final response = await http.post(
+        url,
+        body: {
+          'id': userId,
+          'image': '', // Important: triggers backend image clearing logic
+        },
         headers: {
           "authorization":
               "Bearer ${await token.then((value) => value!.token)}",
         },
       );
+
+      if (response.statusCode != 200) {
+        throw ServerException(message: 'Image not cleared');
+      }
     } catch (e) {
-      throw ServerException(message: 'cannot update profile');
+      throw ServerException(message: 'Cannot clear image');
     }
   }
 

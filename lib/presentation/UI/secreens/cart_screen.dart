@@ -144,7 +144,7 @@ class _CartPageState extends State<CartPage> {
                                       padding:
                                           const EdgeInsets.only(bottom: 10.0),
                                       child: Text(
-                                        'Total: \$${total.toStringAsFixed(2)}',
+                                        'Total: ${total.toStringAsFixed(2)}\D',
                                         style: const TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class _CartPageState extends State<CartPage> {
                                               title:
                                                   const Text('Order Summary'),
                                               content: Text(
-                                                'Your total order amount is \$${total.toStringAsFixed(2)}.',
+                                                'Your total order amount is ${total.toStringAsFixed(2)}\D.',
                                               ),
                                               actions: [
                                                 TextButton(
@@ -191,7 +191,7 @@ class _CartPageState extends State<CartPage> {
                                           backgroundColor: Colors.green,
                                         ),
                                         child: Text(
-                                          'Order Now - \$${total.toStringAsFixed(2)}',
+                                          'Order Now - ${total.toStringAsFixed(2)} D',
                                           style: const TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
@@ -423,11 +423,10 @@ class CartSaleCard extends StatelessWidget {
                     // Total Price
                     Row(
                       children: [
-                        const Icon(Icons.attach_money,
-                            size: 18, color: Colors.green),
+                        const Icon(Icons.money, size: 18, color: Colors.green),
                         const SizedBox(width: 8.0),
                         Text(
-                          '\$${totalPrice.toStringAsFixed(2)}',
+                          '${totalPrice.toStringAsFixed(2)}\D',
                           style: const TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,

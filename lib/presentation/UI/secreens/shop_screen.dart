@@ -19,7 +19,7 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   final CategoryController categoryController = Get.put(CategoryController());
   final ProductController productController = Get.put(ProductController());
-  final CartController cartController = Get.find(); // Add CartController
+  final CartController cartController = Get.find();
 
   @override
   void initState() {
@@ -275,12 +275,15 @@ class _ShopScreenState extends State<ShopScreen> {
                   );
                 },
               ),
+              SliverPadding(
+                padding: const EdgeInsets.only(bottom: 85),
+              ),
             ],
           ),
 
           Positioned(
             // bottom: 110,
-            bottom: 8,
+            bottom: 90,
             right: 20, // Keep it aligned to the right
             child: GetBuilder<CartController>(
               builder: (cartController) {

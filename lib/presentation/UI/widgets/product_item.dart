@@ -35,14 +35,28 @@ class _ProductItemState extends State<ProductItem> {
     final String? wishlistId =
         wishlistController.getWishlistIdForUser(currentUserId);
 
+    // if (wishlistId != null) {
+    //   // Fetch wishlist and check if the product is in it
+    //   wishlistController.getWishlistByUserId(currentUserId!).then((success) {
+    //     if (success && wishlistController.userWishlist != null) {
+    //       setState(() {
+    //         isInWishlist = wishlistController.userWishlist!.productIds
+    //             .contains(widget.product.id);
+    //       });
+    //     }
+    //   });
+    // }
     if (wishlistId != null) {
       // Fetch wishlist and check if the product is in it
       wishlistController.getWishlistByUserId(currentUserId!).then((success) {
         if (success && wishlistController.userWishlist != null) {
-          setState(() {
-            isInWishlist = wishlistController.userWishlist!.productIds
-                .contains(widget.product.id);
-          });
+          if (mounted) {
+            // Check if the widget is still in the widget tree
+            setState(() {
+              isInWishlist = wishlistController.userWishlist!.productIds
+                  .contains(widget.product.id);
+            });
+          }
         }
       });
     }
@@ -187,16 +201,28 @@ class _ProductItemState extends State<ProductItem> {
               ),
             ),
           ),
+
           // Overlapping Product Image
           Positioned(
-            top: -30, // Adjust to control the overlap
+            top: -30,
             left: 20,
             right: 20,
             child: CircleAvatar(
               radius: 40,
-              backgroundImage: NetworkImage(widget.product.image),
+              backgroundColor: Colors.grey[200], // Background color
+              child: widget.product.image.isEmpty
+                  ? Icon(Icons.fastfood,
+                      size: 40, color: Colors.white) // Placeholder icon
+                  : ClipOval(
+                      child: Image.network(
+                        widget.product.image,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
+                    ),
             ),
-          ),
+          )
         ],
       ),
     );

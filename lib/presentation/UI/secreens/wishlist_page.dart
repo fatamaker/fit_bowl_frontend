@@ -113,7 +113,8 @@ class _WishlistPageState extends State<WishlistPage> {
                 )
               : wishlistProducts.isNotEmpty
                   ? ListView.builder(
-                      padding: const EdgeInsets.all(16.0),
+                      padding:
+                          const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
                       itemCount: wishlistProducts.length,
                       itemBuilder: (context, index) {
                         final product = wishlistProducts[index];

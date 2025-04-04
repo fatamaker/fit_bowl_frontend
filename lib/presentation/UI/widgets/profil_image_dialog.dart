@@ -1,4 +1,5 @@
 import 'package:fit_bowl_2/core/utils/string_const.dart';
+import 'package:fit_bowl_2/presentation/UI/secreens/profil_screen.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,6 +69,7 @@ class ProfileImageDialog extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await controller.updateImage(context);
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFAF6767),
