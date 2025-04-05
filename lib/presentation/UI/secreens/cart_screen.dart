@@ -244,7 +244,7 @@ class _CartPageState extends State<CartPage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
-                                              'Sale for product ${sale.productId} removed from cart')),
+                                              'product removed from cart')),
                                     );
                                   }
 

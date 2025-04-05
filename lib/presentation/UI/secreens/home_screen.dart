@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: Color(0xFFD9D9D9),
+        backgroundColor: Colors.white,
         child: Column(
           children: [
             Column(
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 DrawerHeader(
                   padding: EdgeInsets.zero,
                   child: Container(
-                    color: Color(0xFFD9D9D9),
+                    color: Colors.white,
                     child: GetBuilder<AuthenticationController>(
                         builder: (controller) {
                       final currentUser = controller.currentUser;

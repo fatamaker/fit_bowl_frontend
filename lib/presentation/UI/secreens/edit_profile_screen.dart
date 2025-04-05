@@ -464,11 +464,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Profile updated successfully!"),
-              ),
-            );
             authenticationController.updateProfile(
               firstName: _firstNameController,
               lastName: _lastNameController,
@@ -480,6 +475,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               context: context,
             );
           }
+          Navigator.of(context).pop(true);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1B6A3D),

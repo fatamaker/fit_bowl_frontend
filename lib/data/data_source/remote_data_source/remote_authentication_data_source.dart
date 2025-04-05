@@ -297,10 +297,6 @@ class AuthenticationRemoteDataSourceImpl
           'id': userId,
           'image': '', // Important: triggers backend image clearing logic
         },
-        headers: {
-          "authorization":
-              "Bearer ${await token.then((value) => value!.token)}",
-        },
       );
 
       if (response.statusCode != 200) {

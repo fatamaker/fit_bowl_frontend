@@ -102,6 +102,11 @@ class AuthenticationController extends GetxController {
     update();
   }
 
+  void setFile(File? file) {
+    f = file;
+    update([ControllerID.UPDATE_USER_IMAGE]);
+  }
+
   // Future<String> createAccount(
   //     {required TextEditingController email,
   //     required TextEditingController firstName,
@@ -372,7 +377,7 @@ class AuthenticationController extends GetxController {
         gender: gender,
         birthDate: DateTime.parse(birthDate));
     res.fold((l) => message = l.message!, (r) async {
-      message = "profile_updated";
+      message = "Profile updated successfully!";
       await getCurrentUser(currentUser.id!);
     });
     Fluttertoast.showToast(
@@ -380,7 +385,7 @@ class AuthenticationController extends GetxController {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 71, 68, 68),
         textColor: Colors.white,
         fontSize: 16.0);
   }

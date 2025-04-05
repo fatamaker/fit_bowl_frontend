@@ -47,9 +47,9 @@ class ProfileImageDialog extends StatelessWidget {
                       child: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () async {
-                          controller.setuserImage(controller.userImage == ''
-                              ? controller.currentUser.imageUrl!
-                              : '');
+                          controller.setuserImage('');
+                          controller.setFile(null);
+                          controller.update();
                         },
                       ),
                     ),

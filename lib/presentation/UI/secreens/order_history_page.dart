@@ -69,6 +69,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text('Order Details',
@@ -228,53 +229,78 @@ class OrderHistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFF3F3F3),
+      color: const Color(0xFFF9F9F9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            const SizedBox(width: 16),
-            Icon(
-              Icons.receipt_long, // Order icon
-              size: 30,
-              color: const Color.fromARGB(255, 24, 89, 35),
+            // Leading Icon
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F5E9),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: const Icon(
+                Icons.receipt_long_outlined,
+                size: 30,
+                color: Color(0xFF1B5E20),
+              ),
             ),
             const SizedBox(width: 16),
-            // Displaying Order ID
+
+            // Order Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Displaying Order Number (e.g. "Order 1")
+                  // Order ID
                   Text(
-                    orderId,
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4.0),
-
-                  // Displaying Quantity
-                  Text(
-                    'Quantity: $quantity',
-                    style: TextStyle(fontSize: 14.0, color: Colors.grey[700]),
-                  ),
-                  const SizedBox(height: 4.0),
-
-                  // Displaying Total Price
-                  Text(
-                    'Total: ${totalPrice.toStringAsFixed(2)}\D',
+                    '$orderId',
                     style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.shopping_cart_outlined,
+                          size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Salads: $quantity',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money,
+                          size: 16, color: Colors.green),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Total: ${totalPrice.toStringAsFixed(2)} D',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            // Cart Icon
+
+            // Trailing Arrow (optional)
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
       ),
