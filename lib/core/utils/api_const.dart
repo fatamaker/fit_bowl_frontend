@@ -52,4 +52,5 @@ class APIConst {
   static const resetPassword = '$baseUrl/Resetpassword';
   static const verfifCode = '$baseUrl/VerifCode';
   static const updateUserImage = '$baseUrl/updateImage';
+  static const updateEmail = '$baseUrl/updateEmail';
 }

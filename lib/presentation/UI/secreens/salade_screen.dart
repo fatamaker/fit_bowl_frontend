@@ -172,8 +172,8 @@ class _SaladeScreenState extends State<SaladeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Taille: ${selectedSize == widget.product.sizes?.small ? 'S' : selectedSize == widget.product.sizes?.medium ? 'M' : 'L'}        '
-                      'calories: ${selectedSize.calories ?? 0}',
+                      'Size: ${selectedSize == widget.product.sizes?.small ? 'S' : selectedSize == widget.product.sizes?.medium ? 'M' : 'L'}        '
+                      'Calories: ${selectedSize.calories ?? 0}',
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -220,7 +220,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Ingrédients',
+                      'Ingredients',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -254,7 +254,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
             // Add-Ons Section
             Center(
               child: const Text(
-                'Souhaitez-vous des suppléments :',
+                'do you want some supplements :',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
@@ -278,7 +278,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Combien de bol :',
+                  'How many bowls :',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -463,7 +463,7 @@ class _SaladeScreenState extends State<SaladeScreen> {
                   title,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text('Prix: $price D'),
+                Text('Price: $price D'),
                 Text('Calories: $calories'),
               ],
             ),

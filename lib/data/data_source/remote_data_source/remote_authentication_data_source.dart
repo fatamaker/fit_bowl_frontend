@@ -48,7 +48,7 @@ abstract class AuthenticationRemoteDataSource {
 
   Future<void> updatePassword(
       String userId, String oldPassword, String newPassword);
-
+  Future<void> updateEmail(String userId, String newEmail);
   Future<User> getUserById(String userId);
   Future<void> clearUserImage(String userId);
 }
@@ -337,6 +337,21 @@ class AuthenticationRemoteDataSourceImpl
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateEmail(String userId, String newEmail) async {
+    final response = await http.put(
+      Uri.parse(APIConst.updateEmail),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'id': userId, 'email': newEmail}),
+    );
+
+    if (response.statusCode != 200) {
+      throw ServerException();
     }
   }
 

@@ -194,4 +194,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> updateEmail(
+      String userId, String newEmail) async {
+    try {
+      await authenticationRemoteDataSource.updateEmail(userId, newEmail);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 }

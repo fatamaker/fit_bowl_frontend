@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fit_bowl_2/domain/usecases/cartusecase/create_cart_usecase.dart';
+import 'package:fit_bowl_2/domain/usecases/userusecase/update_emai_usercase.dart';
 import 'package:fit_bowl_2/domain/usecases/wishlistusecase/create_wishlistusecase.dart';
 import 'package:fit_bowl_2/presentation/controllers/cart_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/wishlist_controller.dart';
@@ -492,6 +493,46 @@ class AuthenticationController extends GetxController {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Future<void> updateEmail(
+      TextEditingController emailController, BuildContext context) async {
+    // Ensure currentUser is initialized first
+    if (currentUser == null) {
+      await getCurrentUser(currentUser.id!);
+    }
+
+    if (currentUser == null) {
+      Fluttertoast.showToast(
+          msg: "User data is not available. Please log in again.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+
+    String message = 'error';
+
+    final res = await UpdateEmailUsercase(sl())(
+      userId: currentUser.id!,
+      newEmail: emailController.text,
+    );
+
+    res.fold((l) => message = l.message!, (r) async {
+      message = "email_updated";
+      emailController.clear();
+      await getCurrentUser(currentUser.id!); // refresh current user
+    });
+
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0);

@@ -88,6 +88,7 @@ flutter:
     - assetes/animations/coeur.json
     - assetes/animations/cart.json
     - assetes/animations/salade_about.json
+    - assetes/animations/order_history.json
     
    
 

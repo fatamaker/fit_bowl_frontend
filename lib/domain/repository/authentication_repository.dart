@@ -46,6 +46,7 @@ abstract class AuthenticationRepository {
     required String oldPassword,
     required String newPassword,
   });
+  Future<Either<Failure, Unit>> updateEmail(String userId, String newEmail);
 
   Future<Either<Failure, Unit>> updateImage({
     required String userId,

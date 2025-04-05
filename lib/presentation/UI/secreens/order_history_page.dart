@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fit_bowl_2/presentation/controllers/order_controller.dart';
 import 'package:fit_bowl_2/presentation/controllers/authetification_controller.dart';
+import 'package:lottie/lottie.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -182,10 +183,26 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                   child:
                       Text(errorMessage, style: const TextStyle(fontSize: 18)))
               : _orderController.userOrders.isEmpty
-                  ? const Center(
-                      child: Text('No orders yet!',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)))
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: 200,
+                            child: Lottie.asset(
+                                'assetes/animations/order_history.json'),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'No orders yet!',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   : Column(
                       children: [
                         Expanded(
